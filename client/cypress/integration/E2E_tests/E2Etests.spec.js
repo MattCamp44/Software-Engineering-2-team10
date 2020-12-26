@@ -254,13 +254,17 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate()+1);
-    const tomorrowstring = tomorrow.toISOString().slice(0,2);
-
+    // const tomorrowstring = tomorrow.toISOString().slice(0,2);
+    const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
+    const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+    
     const deadline = new Date(today);
     deadline.setDate(deadline.getDate() + 5);
 
-    const deadlinestring = deadline.toISOString().slice(0,16);
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
     
+
 
 
       console.log(tomorrowstring);
@@ -396,17 +400,23 @@ describe('[LSBT1-13]As a student I want to be put in a waiting list when no seat
       const today = new Date();
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate()+1);
-      const tomorrowstring = tomorrow.toISOString().slice(0,2);
-
+      // const tomorrowstring = tomorrow.toISOString().slice(0,2);
+      const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
+      const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+      
       const deadline = new Date(today);
       deadline.setDate(deadline.getDate() + 5);
-
-      const deadlinestring = deadline.toISOString().slice(0,16);
+  
+      // const deadlinestring = deadline.toISOString().slice(0,16);
+      const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
       
-
-
-      //(CourseId, Schedule,BookingDeadline, NotificationDeadline, EndTime,Bookable, Canceled, TeacherId, NotificationAdded, Room ,Seats, Day, Time)
-      const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring + 1 , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+  
+  
+        console.log(tomorrowstring);
+        console.log(deadlinestring);
+        console.log(new Date(tomorrowstring));
+      const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
 
       addLecture(lectureData);
 
@@ -428,6 +438,10 @@ describe('[LSBT1-13]As a student I want to be put in a waiting list when no seat
       cy.get('.react-confirm-alert-button-group > :nth-child(1)').should('have.text', 'Yes').click();
       cy.get('.custom-ui-warning > :nth-child(3)').should('have.text','you\'re now in the waiting list.');
       cy.get('.custom-ui-warning > button').should('have.text','Ok').click();
+
+
+      //Does not work, maybe has been taken away?
+
       cy.get('.btn').should('have.text','Waiting list');
 }
 
@@ -441,6 +455,21 @@ describe('[LSBT1-14]As a student in the waiting list I want to be added to the l
     cy.get('#collasible-nav-dropdown > span').click();
     cy.get('.dropdown-item').click();
     studentLogin(1);
+    cy.get('.card1').click();
+    cy.get('[href="/BookingHistory"]').click();
+    cy.get(':nth-child(11) > .fc-timegrid-slot-lane');
+    cy.scrollTo('top');
+    cy.get('.fc-event-title').should('have.text', "data science" );
+    cy.get('input').click();
+    cy.get('.react-confirm-alert-body').should('have.text', "WarningDo you want to cancel the reservation for this lecture?YesNo");
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    cy.get('#collasible-nav-dropdown > span').click();
+    cy.get('.dropdown-item').click();
+    studentLogin(2);
+    cy.get('[href="/BookingHistory"]').click();
+    cy.get(':nth-child(11) > .fc-timegrid-slot-lane');
+    cy.scrollTo('top');
+    cy.get('.fc-event-title').should('have.text', "data science" );
   })
 
 

@@ -295,12 +295,14 @@ exports.bookLecture = function (lectureId, userId, scheduleDate) {
           else if (rows.length === 0) resolve(undefined);
           else {
             let capacity = rows[0].Capacity;
+            console.log(capacity);
             const sqlBookingCount = `select BookCount as BookedCount from AvailableSeats where LectureId=?`;
             db.all(sqlBookingCount, [lectureId], (err, rows) => {
               if (err) reject(err);
               else if (rows.length === 0) resolve(undefined);
               else {
                 let bookedCount = rows[0].BookedCount;
+                console.log("bookedCount:" + bookedCount + " Capacity:" + capacity);
                 if (bookedCount < capacity) {
                   const sqlBook = `Insert into Booking(StudentId, LectureId, BookDate) Values (?, ?,  datetime('now','localtime'))`;
                   db.run(
