@@ -1359,11 +1359,9 @@ exports.clearDatabase = function () {
       `;
       db.run(sql, [...data], (err) => {
         if (err) {
-        //console.log(err);
-        //console.log("DB failed adding course");
+        
         reject(err);
       } else {
-        //console.log("DAO resolved");
         resolve(null);}
     });
   });
@@ -1372,7 +1370,6 @@ exports.clearDatabase = function () {
 exports.addBooking = function (data) {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried clearing production database");
       reject("ClearProductionDB");
     }
     
@@ -1380,11 +1377,8 @@ exports.addBooking = function (data) {
     `;
     db.run(sql, [...data], (err) => {
       if (err) {
-      console.log(err);
-      console.log("DB failed adding course");
       reject(err);
     } else {
-      console.log("DAO resolved");
       resolve(null);}
   });
 });
@@ -1396,7 +1390,6 @@ exports.addBooking = function (data) {
 exports.addStudentCourse = function (data) {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried clearing production database");
       reject("ClearProductionDB");
     }
     
@@ -1404,11 +1397,8 @@ exports.addStudentCourse = function (data) {
     `;
     db.run(sql, [...data], (err) => {
       if (err) {
-      console.log(err);
-      console.log("DB failed adding course");
       reject(err);
     } else {
-      console.log("DAO resolved");
       resolve(null);}
   });
 });
@@ -1418,7 +1408,6 @@ exports.addStudentCourse = function (data) {
 exports.addLecture = function (data) {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried modifying production database");
       reject("ClearProductionDB");
     }
 
