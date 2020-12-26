@@ -17,6 +17,11 @@ const jwtSecret = "9SMivhSVEMs8KMz3nSvEsbnTBT4YkKaY4pnS957cDG7BID6Z7ZpxUC0jgnEqR
 
 var multer = require('multer')
 var cors = require('cors');
+let corsOptions = {
+    origin: 'trustedwebsite.com' // Compliant
+};
+
+
 
 //dao.setDb("db/PULSeBS_test.db");
 //dao.setDb("db/PULSeBS_test_empty.db");
@@ -40,7 +45,7 @@ let app = new express();
 app.use(morgan('dev')); //to print log as Standard Apache combined log output.
 app.use(express.json()); //method inbuilt in express to recognize the incoming Request Object as a JSON Object
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptions));
 var fs = require('fs');
 const neatCsv = require('neat-csv');
 
@@ -438,9 +443,16 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
         },
         filename: function (req, file, cb) {
             cb(null, Date.now() + '-' + file.originalname)
+        },
+        limits: {
+            fileSize: 8000000 
         }
     })
-    var upload = multer({ storage: storage }).any();
+    var upload = multer({
+        storage: storage, limits: {
+            fileSize: 8000000 
+        }
+    }).any();
 
     upload(req, res, function (err) {
         if (err) {
