@@ -131,6 +131,39 @@ function clearDatabase(){
 }
 
 
+function getTodayString(){
+  
+  var today = new Date();
+
+  return today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+
+}
+
+
+function getTomorrowString(){
+
+  var today = new Date();
+  var tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  return tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
+
+}
+
+function getTodayPlusNString(n){
+
+  var today = new Date();
+  var day = new Date(today);
+  day.setDate(day.getDate()+n);
+  return day.toISOString().slice(0,10) + " " + day.toISOString().slice(11,16);
+
+
+}
+
+
+
+
+
+
 describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so that I can attend it', () =>{
 
   
@@ -148,24 +181,11 @@ describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so 
 
 
 
+      
+      const tomorrowstring = getTomorrowString();
+      
 
-      new Date().toLocaleDateString(
-        'en-gb',
-        {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric'
-        }
-      );
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate()+1);
-      const tomorrowstring = tomorrow.toISOString().slice(0,2);
-
-      const deadline = new Date(today);
-      deadline.setDate(deadline.getDate() + 5);
-
-      const deadlinestring = deadline.toISOString().slice(0,16);
+      const deadlinestring = getTodayPlusNString(5);
       
 
 
@@ -196,20 +216,17 @@ describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so 
 
       addStudentCourse(studentcourseData);
       
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate()+20);
-      const tomorrowstring = tomorrow.toISOString().slice(0,16);
+      
+      
+      
+      const schedulestring = getTodayPlusNString(20);
 
-      const deadline = new Date(today);
-      deadline.setDate(deadline.getDate() + 20);
-
-      const deadlinestring = deadline.toISOString().slice(0,16);
+      const deadlinestring =  getTodayPlusNString(20);
       
 
 
         
-      const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+      const lectureData = [1,schedulestring, deadlinestring, deadlinestring, schedulestring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
          
       addLecture(lectureData);
       
@@ -319,33 +336,19 @@ describe('[LSBT1-5]As a student I want to cancel my booking so that I am free' ,
     
           studentcourseData = [2,1,3];
           addStudentCourse(studentcourseData);
-          new Date().toLocaleDateString(
-            'en-gb',
-            {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric'
-            }
-          );
-          const today = new Date();
-          const tomorrow = new Date(today);
-          tomorrow.setDate(tomorrow.getDate()+1);
-          // const tomorrowstring = tomorrow.toISOString().slice(0,2);
-          const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
-          const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
           
-          const deadline = new Date(today);
-          deadline.setDate(deadline.getDate() + 5);
+         
+          // const tomorrowstring = tomorrow.toISOString().slice(0,2);
+          const tomorrowstring = getTomorrowString();
+          
       
           // const deadlinestring = deadline.toISOString().slice(0,16);
-          const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
+          const deadlinestring = getTodayPlusNString(5);
           
       
       
       
-            console.log(tomorrowstring);
-            console.log(deadlinestring);
-            console.log(new Date(tomorrowstring));
+            
           const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
     
           addLecture(lectureData);
@@ -417,33 +420,19 @@ describe('[LSBT1-13]As a student I want to be put in a waiting list when no seat
 
       studentcourseData = [2,1,3];
       addStudentCourse(studentcourseData);
-      new Date().toLocaleDateString(
-        'en-gb',
-        {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric'
-        }
-      );
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate()+1);
-      // const tomorrowstring = tomorrow.toISOString().slice(0,2);
-      const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
-      const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
       
-      const deadline = new Date(today);
-      deadline.setDate(deadline.getDate() + 5);
-  
+      
+      const tomorrowstring = getTomorrowString();
+      const todaystring = getTodayString();
+      
+      
       // const deadlinestring = deadline.toISOString().slice(0,16);
-      const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
+      const deadlinestring = getTodayPlusNString(5);
       
   
   
   
-        console.log(tomorrowstring);
-        console.log(deadlinestring);
-        console.log(new Date(tomorrowstring));
+     
       const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
 
       addLecture(lectureData);
