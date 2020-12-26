@@ -228,7 +228,7 @@ describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so 
 
 describe('[LSBT1-2]As a teacher I want to get notified of the number of students attending my next lecture so that I am informed' , () => {
 
-  it('Student books a lecture -> teacher receives notification', () => {
+  it('Student books a lecture then teacher receives notification', () => {
       
     clearDatabase();
     
@@ -267,9 +267,7 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
 
 
 
-      console.log(tomorrowstring);
-      console.log(deadlinestring);
-      console.log(new Date(tomorrowstring));
+    
     const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
        
     addLecture(lectureData);
@@ -295,43 +293,7 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  // it('Professor Login', () => {
-  //   clearDatabase();
-      
-  //   const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
-  //   addCourse(courseData);
-
-  //   const today = new Date();
-  //     const tomorrow = new Date(today);
-  //     tomorrow.setDate(tomorrow.getDate()+20);
-  //     const tomorrowstring = tomorrow.toISOString().slice(0,16);
-
-  //     const deadline = new Date(today);
-  //     deadline.setDate(deadline.getDate() + 20);
-
-  //     const deadlinestring = deadline.toISOString().slice(0,16);
-      
-
-
-        
-  //     const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
-  //     addLecture(lectureData);
-
-  //     const bookingDate = new Date().toISOString().slice(0,16);
-
-  //     const bookingData = [1,1,1,null,null,null,null,null,bookingDate];
-  //     addBooking(bookingData);
-
-  //   professorLogin();
-
-  //   cy.get('.btn > .svg-inline--fa > path').click();
-  //   cy.get('.d-inline-flex > :nth-child(2)').click();
-  //   cy.get('tbody > tr > :nth-child(1)').should('have.text',courseData[5]);
-  //   cy.get('tbody > tr > :nth-child(2)').should('have.text',bookingDate);
-
-
-    
-  // })
+  
 
 
 })
