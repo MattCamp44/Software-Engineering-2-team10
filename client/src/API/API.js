@@ -146,14 +146,14 @@ async function bookLecture(lectureId, userId, scheduleDate) {
     })
       .then((response) => {
         if (response.ok) {
-          response.json().then((json)=>{
+          response.json().then((json) => {
             resolve(json.reserved);
-            });
-          } else {
-            let err = { status: response.status, errObj: response };
-            throw err;
-          }
-        
+          });
+        } else {
+          let err = { status: response.status, errObj: response };
+          throw err;
+        }
+
       })
       .catch((err) => {
         reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] });
@@ -177,7 +177,7 @@ async function getBookingHistory(userId) {
   }
 }
 
-async function cancelReservation(id,lectureId) {
+async function cancelReservation(id, lectureId) {
   return new Promise((resolve, reject) => {
     fetch(APIURL + `/cancelReservation/${id}/${lectureId}`, {
       method: "PUT",
@@ -278,8 +278,8 @@ async function getTeacherCourses() {
   }
 }
 
-async function getCourseLectures(courseId) {
-  const url = `/getCourseLectures/${courseId}`;
+async function getCourseLectures(courseId, canceled, startDate, endDate) {
+  const url = `/getCourseLectures/${courseId}?canceled=${canceled}&startDate=${startDate}&endDate=${endDate}`;
   const response = await fetch(APIURL + url);
   const lectures = await response.json();
   if (response.ok) {
@@ -344,11 +344,11 @@ async function getTeacherStats(period, userId, startDate, endDate, courseId) {
   if (response.ok) {
     return json.map((row) => {
       let r = null;
-      if (period === "Weekly") {
+      if (period === "W") {
         r = { avg: row.avg.toFixed(2), no: row.weekno };
         return r;
       }
-      else if (period === "Monthly") {
+      else if (period === "M") {
         r = { avg: row.avg.toFixed(2), no: row.monthno };
         return r;
       }
@@ -405,11 +405,11 @@ async function getBookingStatistics(period, startDate, endDate) {
   if (response.ok) {
     return json.map((row) => {
       let r = null;
-      if (period === "Weekly") {
+      if (period === "W") {
         r = { avg: row.avg.toFixed(2), no: row.weekno, CourseId: row.CourseId, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
-      else if (period === "Monthly") {
+      else if (period === "M") {
         r = { avg: row.avg.toFixed(2), no: row.monthno, CourseId: row.CourseId, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
@@ -436,11 +436,11 @@ async function getCancellationStatistics(period, startDate, endDate) {
   if (response.ok) {
     return json.map((row) => {
       let r = null;
-      if (period === "Weekly") {
+      if (period === "W") {
         r = { avg: row.CancelCounts, no: row.weekno, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
-      else if (period === "Monthly") {
+      else if (period === "M") {
         r = { avg: row.CancelCounts, no: row.monthno, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
@@ -466,11 +466,11 @@ async function getAttendanceStatistics(period, startDate, endDate) {
   if (response.ok) {
     return json.map((row) => {
       let r = null;
-      if (period === "Weekly") {
+      if (period === "W") {
         r = { avg: row.PresenceCount, no: row.weekno, CourseId: row.CourseId, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
-      else if (period === "Monthly") {
+      else if (period === "M") {
         r = { avg: row.PresenceCount, no: row.monthno, CourseId: row.CourseId, CourseName: row.CourseName, TeacherName: row.TeacherName };
         return r;
       }
@@ -540,18 +540,20 @@ async function getContactTracingReport(userId) {
   }
 }
 
-async function getPresenceHistory(courseId, startDate, endDate) {
-  let url = "/getPresenceHistory";
-  const queryParams = "/" + courseId + "/" + startDate + "/" + endDate;
-  url += queryParams;
-  const response = await fetch(APIURL + url);
-  const json = await response.json();
-  if (response.ok) {
-    return json;
-  } else {
-    let err = { status: response.status, errObj: json };
-    throw err;
-  }
+async function updatePresence(bookingId, value) {
+  return new Promise((resolve, reject) => {
+    fetch(APIURL + `/updatepresence/${bookingId}/${value}`, {
+      method: 'POST'
+    }).then((response) => {
+      if (response.ok) {
+        resolve(null);
+      } else {
+        response.json()
+          .then((obj) => { reject(obj); })
+          .catch((err) => { reject({ errors: [{ param: "Application", msg: "Cannot parse server response" }] }) }); 
+      }
+    }).catch((err) => { reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] }) });
+  });
 }
 
-export default { isAuthenticated, login, logout, getStudentCurrentCourses, getAvailableLectures, bookLecture, getBookingHistory, cancelReservation, getNotification, updateNotificationStatus, getStudentsPerLecturePerProfessor, getTeacherCourses, getCourseLectures, getLectureStudents, cancelLecture, makeLectureOnline, getTeacherStats, getAllCourses, getBookingStatistics, getCancellationStatistics, getAttendanceStatistics, uploadDataCSV, clearDatabase, addCourse, getPositiveStudents, getContactTracingReport, getPresenceHistory };
+export default { isAuthenticated, login, logout, getStudentCurrentCourses, getAvailableLectures, bookLecture, getBookingHistory, cancelReservation, getNotification, updateNotificationStatus, getStudentsPerLecturePerProfessor, getTeacherCourses, getCourseLectures, getLectureStudents, cancelLecture, makeLectureOnline, getTeacherStats, getAllCourses, getBookingStatistics, getCancellationStatistics, getAttendanceStatistics, uploadDataCSV, clearDatabase, addCourse, getPositiveStudents, getContactTracingReport, updatePresence };
