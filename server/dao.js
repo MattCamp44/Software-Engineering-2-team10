@@ -1279,7 +1279,6 @@ exports.clearDatabase = function () {
       db.run(sql, (err) => {
         if (err) {
           console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1290,7 +1289,6 @@ exports.clearDatabase = function () {
       db.run(sqlLecture, (err) => {
         if (err) {
           console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1301,7 +1299,6 @@ exports.clearDatabase = function () {
       db.run(sqlBooking, (err) => {
         if (err) {
           console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1311,8 +1308,6 @@ exports.clearDatabase = function () {
       "DELETE from Class"; 
       db.run(sqlClass, (err) => {
         if (err) {
-          console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1323,8 +1318,6 @@ exports.clearDatabase = function () {
       "DELETE from StudentCourse"; 
       db.run(sqlStudentCourse, (err) => {
         if (err) {
-          console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1335,8 +1328,6 @@ exports.clearDatabase = function () {
       "DELETE from TeacherNotification"; 
       db.run(sqlTeacherNotification, (err) => {
         if (err) {
-          console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1348,8 +1339,6 @@ exports.clearDatabase = function () {
       "DELETE from user where UserId>23"; 
       db.run(sqlUser, (err) => {
         if (err) {
-          console.log("DB failed clearing database");
-          console.log(err);
           reject(err);
           
         } else resolve(null);
@@ -1370,11 +1359,11 @@ exports.clearDatabase = function () {
       `;
       db.run(sql, [...data], (err) => {
         if (err) {
-        console.log(err);
-        console.log("DB failed adding course");
+        //console.log(err);
+        //console.log("DB failed adding course");
         reject(err);
       } else {
-        console.log("DAO resolved");
+        //console.log("DAO resolved");
         resolve(null);}
     });
   });

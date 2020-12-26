@@ -364,6 +364,37 @@ describe("check Contact tracing", () => {
 });
 
 
+describe("dao test functions", () => {
+
+  test("test addCourse", () => {
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+
+    dao.addCourse(courseData).then(
+      (data) => {
+        expect(data === null);
+      }
+    )
+
+  })//test
+
+
+  // test("test clearDatabase",() => {
+
+  //   dao.clearDatabase().then(
+  //     (data) => {
+  //       expect(data === null);
+  //     }
+  //   )
+
+
+  // })
+
+
+}) //describe
+
+
+
+
 initLectures = () => {
   
   var day = moment().add(4, 'd').format("yyyy-MM-DD")+" 10:00"
