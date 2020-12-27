@@ -520,7 +520,7 @@ function insertNotification(lecture) {
 
     var mailOptions = {
         from: "politotestflight@gmail.com",
-        to: lecture.Email + ",r.meydanshahi@gmail.com",
+        to: lecture.Email + ",politotestflight@gmail.com",
         subject: subject,
         text: body
     };
@@ -548,7 +548,7 @@ function sendMailToStudent(book) {
 
     var mailOptions = {
         from: 'politotestflight@gmail.com',
-        to: book.Email + ",r.meydanshahi@gmail.com",
+        to: book.Email + ",politotestflight@gmail.com",
         subject: subject,
         text: body
     };
@@ -577,7 +577,7 @@ function sendCancelationMailToStudent(lecture) {
 
     var mailOptions = {
         from: 'politotestflight@gmail.com',
-        to: lecture.Emails_List + ",r.meydanshahi@gmail.com",
+        to: lecture.Emails_List + ",politotestflight@gmail.com",
         subject: subject,
         text: body
     };
