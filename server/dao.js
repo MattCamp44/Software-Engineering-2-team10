@@ -1083,9 +1083,9 @@ exports.importCSVData = function (data, type) {
 
 exports.clearDatabase = function () {
   return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      reject("ClearProductionDB");
-    }
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
 
 
     const sql =
@@ -1122,14 +1122,15 @@ exports.clearDatabase = function () {
 
 exports.addCourse = function (data) {
   return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      reject("ClearProductionDB");
-    }
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
 
     let sql = `insert into Course (CourseId,Name,Description,Year,Semester,Teacher) values (?, ?, ?, ?, ?, ?)                  
       `;
     db.run(sql, [...data], (err) => {
       if (err) {
+        console.log(err);
         reject(err);
       } else {
         resolve(null);
@@ -1140,9 +1141,9 @@ exports.addCourse = function (data) {
 
 exports.addBooking = function (data) {
   return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      reject("ClearProductionDB");
-    }
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
     
     let sql = `insert into Booking (BookingId,StudentId,LectureId,Presence,Canceled,Reserved,CancelDate,ReserveDate,BookDate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)                  
     `;
@@ -1160,9 +1161,9 @@ exports.addBooking = function (data) {
 
 exports.addStudentCourse = function (data) {
   return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      reject("ClearProductionDB");
-    }
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
     
     let sql = `insert into StudentCourse (StudentCourseId,CourseId,StudentId) values (?, ?, ?)                  
     `;
@@ -1179,9 +1180,9 @@ exports.addStudentCourse = function (data) {
 
 exports.addLecture = function (data) {
   return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      reject("ClearProductionDB");
-    }
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
 
     let sql = `insert into Lecture (CourseId, Schedule,
       BookingDeadline, NotificationDeadline, EndTime,

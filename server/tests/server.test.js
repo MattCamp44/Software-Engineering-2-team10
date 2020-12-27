@@ -24,6 +24,12 @@ let db = new sqlite.Database("db/PULSeBS_test.db", (err) => {
   if (err) throw err;
 });
 
+
+
+
+
+
+
 describe("server rest APIs", function () {
   beforeAll(() => {
     // clearBooking();

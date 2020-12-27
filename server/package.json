@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --test=true",
     "start": "node server.js",
     "start-test": "node support_server.js",
     "cypress:open": "cypress open"
