@@ -566,3 +566,7 @@ describe('[LSBT1-16]As a booking manager I want to generate a contact tracing re
 
 describe('[LSBT1-17]As a support officer I want to update the list of bookable lectures' , () => {
 })
+describe('[LSBT1-18]As a teacher I want to record the students present at my lecture among those booked so that I can keep track of actual attendance' , () => {
+})
+describe('[LSBT1-19]As a teacher I want to access the historical data about presence so that I can assess the course' , () => {
+})
