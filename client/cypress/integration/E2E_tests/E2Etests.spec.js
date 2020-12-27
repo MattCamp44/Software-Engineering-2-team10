@@ -310,6 +310,74 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
+
+  it('Student 1 books lecture', () => {
+      
+    clearDatabase();
+    
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+    
+    addCourse(courseData);
+    
+    const studentcourseData = [1,1,1];
+
+    addStudentCourse(studentcourseData);
+
+    
+    
+    const todaystring = getTodayString();
+    
+    const tomorrowstring = getTomorrowString();
+    
+
+    const deadlinestring = getTodayPlusNString(5);
+    
+
+
+    
+     
+    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+       
+    addLecture(lectureData);
+    
+    cy.visit("http://localhost:3000/");
+    studentLogin(1);
+    cy.contains(courseData[2]).click();
+    cy.contains(courseData[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+    //logout
+    cy.get('#collasible-nav-dropdown > span').click();
+    cy.get('.dropdown-item').click();
+  })
+  
+  it('Student 2 books lecture', () => {
+    
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"Joe Simone"];
+    
+    const studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    cy.visit("http://localhost:3000/");
+    studentLogin(2);
+    cy.contains(courseData[2]).click();
+    cy.contains(courseData[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+  })
+
+
+  it('Professor checks list of students', ()=>{
+
+    professorLogin();
+    cy.get('.btn > .svg-inline--fa > path').click();
+    cy.get('.d-inline-flex > :nth-child(2)').click();
+    cy.get('tbody > :nth-child(1) > :nth-child(1)').should('have.text', 'Alex Sandro');
+    cy.get('tbody > :nth-child(2) > :nth-child(1)').should('have.text', 'John Smith');
+
+  })
   
 
 

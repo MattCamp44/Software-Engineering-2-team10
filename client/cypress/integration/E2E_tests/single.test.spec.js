@@ -131,88 +131,117 @@ function clearDatabase(){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-describe('[LSBT1-14]As a student in the waiting list I want to be added to the list of students booked when someone cancels their booking so that I can attend the lecture' , () => {
-
-    it('Students books lecture then cancels reservation',  () => {
-        clearDatabase();
-          
-          //(CourseId,Name,Description,Year,Semester,Teacher)
-          const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
-    
-          addCourse(courseData);
-          
-          //(StudentCourseId,CourseId,StudentId)
-          var studentcourseData = [1,1,1];
-    
-          addStudentCourse(studentcourseData);
-    
-          studentcourseData = [2,1,3];
-          addStudentCourse(studentcourseData);
-          new Date().toLocaleDateString(
-            'en-gb',
-            {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric'
-            }
-          );
-          const today = new Date();
-          const tomorrow = new Date(today);
-          tomorrow.setDate(tomorrow.getDate()+1);
-          // const tomorrowstring = tomorrow.toISOString().slice(0,2);
-          const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
-          const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
-          
-          const deadline = new Date(today);
-          deadline.setDate(deadline.getDate() + 5);
-      
-          // const deadlinestring = deadline.toISOString().slice(0,16);
-          const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
-          
-      
-      
-      
-            console.log(tomorrowstring);
-            console.log(deadlinestring);
-            console.log(new Date(tomorrowstring));
-          const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
-    
-          addLecture(lectureData);
-    
-          cy.visit("http://localhost:3000/");
-          studentLogin(1);
-          cy.contains(courseData[2]).click();
-          cy.contains(courseData[5]); //click();
-          cy.get('.btn').should('have.text', 'Book').click();
-          cy.get('Button').contains('Yes').click();
-          cy.get('Button').contains('Ok').click();
-          cy.get('[href="/BookingHistory"]').click();
-          cy.get('input').click();
-          cy.get('.react-confirm-alert-body').should('have.text', "WarningDo you want to cancel the reservation for this lecture?YesNo");
-          cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
-          cy.get('.navbar-brand').click();
-          cy.get('.card1').click();
-          cy.get('.btn').should('have.text', 'Book');
-
-      })
+function getTodayString(){
   
+  var today = new Date();
+
+  return today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+
+}
+
+
+function getTomorrowString(){
+
+  var today = new Date();
+  var tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  return tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
+
+}
+
+function getTodayPlusNString(n){
+
+  var today = new Date();
+  var day = new Date(today);
+  day.setDate(day.getDate()+n);
+  return day.toISOString().slice(0,10) + " " + day.toISOString().slice(11,16);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  
-  
+  it('Student 1 books lecture', () => {
+      
+    clearDatabase();
+    
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+    
+    addCourse(courseData);
+    
+    const studentcourseData = [1,1,1];
+
+    addStudentCourse(studentcourseData);
+
+    
+    
+    const todaystring = getTodayString();
+    
+    const tomorrowstring = getTomorrowString();
+    
+
+    const deadlinestring = getTodayPlusNString(5);
+    
+
+
+    
+     
+    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+       
+    addLecture(lectureData);
+    
+    cy.visit("http://localhost:3000/");
+    studentLogin(1);
+    cy.contains(courseData[2]).click();
+    cy.contains(courseData[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+    //logout
+    cy.get('#collasible-nav-dropdown > span').click();
+    cy.get('.dropdown-item').click();
   })
+  
+  it('Student 2 books lecture', () => {
+    
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"Joe Simone"];
+    
+    const studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    cy.visit("http://localhost:3000/");
+    studentLogin(2);
+    cy.contains(courseData[2]).click();
+    cy.contains(courseData[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+  })
+
+
+  it('Professor checks list of students', ()=>{
+
+    professorLogin();
+    cy.get('.btn > .svg-inline--fa > path').click();
+    cy.get('.d-inline-flex > :nth-child(2)').click();
+    cy.get('tbody > :nth-child(1) > :nth-child(1)').should('have.text', 'Alex Sandro');
+    cy.get('tbody > :nth-child(2) > :nth-child(1)').should('have.text', 'John Smith');
+
+  })
+
+
+})
