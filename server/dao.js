@@ -1084,7 +1084,6 @@ exports.importCSVData = function (data, type) {
 exports.clearDatabase = function () {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried clearing production database");
       reject("ClearProductionDB");
     }
 
@@ -1096,8 +1095,6 @@ exports.clearDatabase = function () {
     //console.log("Clearing database");
     db.run(sql, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
         reject(err);
 
       } else resolve(null);
@@ -1107,19 +1104,14 @@ exports.clearDatabase = function () {
       "DELETE from Lecture";
     db.run(sqlLecture, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
         reject(err);
 
       } else resolve(null);
     });
-    console.log("CANCEL booking");
     const sqlBooking =
       "DELETE from Booking";
     db.run(sqlBooking, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
         reject(err);
 
       } else resolve(null);
@@ -1131,7 +1123,6 @@ exports.clearDatabase = function () {
 exports.addCourse = function (data) {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried clearing production database");
       reject("ClearProductionDB");
     }
 
@@ -1139,21 +1130,56 @@ exports.addCourse = function (data) {
       `;
     db.run(sql, [...data], (err) => {
       if (err) {
-        console.log(err);
-        console.log("DB failed adding course");
         reject(err);
       } else {
-        console.log("DAO resolved");
         resolve(null);
       }
     });
   });
 };
 
+exports.addBooking = function (data) {
+  return new Promise((resolve, reject) => {
+    if (process.env.npm_config_test !== "true") {
+      reject("ClearProductionDB");
+    }
+    
+    let sql = `insert into Booking (BookingId,StudentId,LectureId,Presence,Canceled,Reserved,CancelDate,ReserveDate,BookDate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)                  
+    `;
+    db.run(sql, [...data], (err) => {
+      if (err) {
+      reject(err);
+    } else {
+      resolve(null);}
+  });
+});
+};
+
+
+
+
+exports.addStudentCourse = function (data) {
+  return new Promise((resolve, reject) => {
+    if (process.env.npm_config_test !== "true") {
+      reject("ClearProductionDB");
+    }
+    
+    let sql = `insert into StudentCourse (StudentCourseId,CourseId,StudentId) values (?, ?, ?)                  
+    `;
+    db.run(sql, [...data], (err) => {
+      if (err) {
+      reject(err);
+    } else {
+      resolve(null);}
+  });
+});
+};
+
+
+
 exports.addLecture = function (data) {
   return new Promise((resolve, reject) => {
     if (process.env.npm_config_test !== "true") {
-      console.log("Tried modifying production database");
       reject("ClearProductionDB");
     }
 
