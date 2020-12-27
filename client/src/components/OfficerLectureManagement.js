@@ -119,7 +119,7 @@ class OfficerLectureManagement extends React.Component {
               <h4 className="display-4 font-italic">
                 <h5>Welcome, {this.props.name}</h5>
               </h4>
-              <p className="lead my-3">
+              <p className="lead my-3 font-weight-bold">
                 To change lecture bookable state, use the form below:
               </p>
             </div>
@@ -187,7 +187,7 @@ class OfficerLectureManagement extends React.Component {
                 <Row>
                   <Table striped bordered hover variant="white">
                     <thead>
-                      <tr style={{ backgroundColor: "#d5a27e" }}>
+                      <tr style={{ color:'white',backgroundColor: "#d5a27e" }}>
                         <th>Course Name</th>
                         <th>Scheduled Day</th>
                         <th>Scheduled Time</th>
@@ -195,7 +195,7 @@ class OfficerLectureManagement extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.lectures.map(this.createLectureRows)}
+                      {this.state.lectures.length>0 ? this.state.lectures.map(this.createLectureRows): <td colSpan="6" style={{textAlign: "center"}}>No lectures available in the selected period.</td>}
                     </tbody>
                   </Table>
                 </Row>
