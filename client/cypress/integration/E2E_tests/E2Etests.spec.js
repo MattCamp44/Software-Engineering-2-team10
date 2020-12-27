@@ -180,7 +180,7 @@ describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so 
       addStudentCourse(studentcourseData);
 
 
-
+      const todaystring = getTodayString();
       
       const tomorrowstring = getTomorrowString();
       
@@ -191,7 +191,7 @@ describe('[LSBT1-1]As a student I want to book a seat for one of my lectures so 
 
         
        
-      const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+      const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
          
       addLecture(lectureData);
       
@@ -285,7 +285,7 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
 
 
     
-    const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
        
     addLecture(lectureData);
     
@@ -345,11 +345,11 @@ describe('[LSBT1-5]As a student I want to cancel my booking so that I am free' ,
           // const deadlinestring = deadline.toISOString().slice(0,16);
           const deadlinestring = getTodayPlusNString(5);
           
-      
+          const todaystring = getTodayString();
       
       
             
-          const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+          const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
     
           addLecture(lectureData);
     
@@ -433,7 +433,7 @@ describe('[LSBT1-13]As a student I want to be put in a waiting list when no seat
   
   
      
-      const lectureData = [1,tomorrowstring, deadlinestring, deadlinestring, tomorrowstring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+      const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
 
       addLecture(lectureData);
 
