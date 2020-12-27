@@ -2,7 +2,7 @@ import StudentCourse from "../Entities/StudentCourse";
 import ProfessorCourse from "../Entities/ProfessorCourse";
 import axios from "axios"
 
-const APIURL = "api";
+const APIURL = "/api";
 
 async function getNotification(userId) {
   return new Promise((resolve, reject) => {
@@ -556,4 +556,49 @@ async function updatePresence(bookingId, value) {
   });
 }
 
-export default { isAuthenticated, login, logout, getStudentCurrentCourses, getAvailableLectures, bookLecture, getBookingHistory, cancelReservation, getNotification, updateNotificationStatus, getStudentsPerLecturePerProfessor, getTeacherCourses, getCourseLectures, getLectureStudents, cancelLecture, makeLectureOnline, getTeacherStats, getAllCourses, getBookingStatistics, getCancellationStatistics, getAttendanceStatistics, uploadDataCSV, clearDatabase, addCourse, getPositiveStudents, getContactTracingReport, updatePresence };
+async function getOfficerLectures(selectedYear, selectedSem){
+  const url = `/getOfficerLectures?year=${selectedYear}&sem=${selectedSem}`;
+  const response = await fetch(APIURL + url);
+  const lectures = await response.json();
+  if (response.ok) {
+    return lectures;
+  } else {
+    let err = { status: response.status, errObj: lectures };
+    throw err;
+  }
+}
+
+async function changeLectureState(type, selectedYear, selectedSem){
+  const url = `/changeLectureState?type=${type}&year=${selectedYear}&sem=${selectedSem}`;
+  return new Promise((resolve, reject) => {
+    fetch(APIURL + url, {
+      method: "PUT",
+    })
+      .then((response) => {
+        if (response.ok) {
+          resolve(null);
+        } else {
+          // analyze the cause of error
+          response
+            .json()
+            .then((obj) => {
+              reject(obj);
+            }) // error msg in the response body
+            .catch((err) => {
+              reject({
+                errors: [
+                  { param: "Application", msg: "Cannot parse server response" },
+                ],
+              });
+            }); // something else
+        }
+      })
+      .catch((err) => {
+        reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] });
+      }); // connection errors
+  });
+}
+
+
+
+export default { isAuthenticated, login, logout, getStudentCurrentCourses, getAvailableLectures, bookLecture, getBookingHistory, cancelReservation, getNotification, updateNotificationStatus, getStudentsPerLecturePerProfessor, getTeacherCourses, getCourseLectures, getLectureStudents, cancelLecture, makeLectureOnline, getTeacherStats, getAllCourses, getBookingStatistics, getCancellationStatistics, getAttendanceStatistics, uploadDataCSV, clearDatabase, addCourse, getPositiveStudents, getContactTracingReport, updatePresence,getOfficerLectures,changeLectureState };
