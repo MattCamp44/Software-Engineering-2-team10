@@ -260,32 +260,21 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
 
 
 
-    new Date().toLocaleDateString(
-      'en-gb',
-      {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-      }
-    );
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate()+1);
-    // const tomorrowstring = tomorrow.toISOString().slice(0,2);
-    const tomorrowstring = tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
-    const todaystring = today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
     
-    const deadline = new Date(today);
-    deadline.setDate(deadline.getDate() + 5);
+    // const tomorrowstring = tomorrow.toISOString().slice(0,2);
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
 
     // const deadlinestring = deadline.toISOString().slice(0,16);
-    const deadlinestring = deadline.toISOString().slice(0,10) + " " + deadline.toISOString().slice(11,16);
+    const deadlinestring = getTodayPlusNString(1);
+    const nowstring =getTodayString();
+
+
+    // (CourseId, Schedule, BookingDeadline, NotificationDeadline, EndTime, Bookable, Canceled, TeacherId, NotificationAdded, Room ,Seats, Day, Time)
     
-
-
-
-    
-    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
+    const lectureData = [1,todaystring, deadlinestring, nowstring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
        
     addLecture(lectureData);
     
@@ -300,8 +289,11 @@ describe('[LSBT1-2]As a teacher I want to get notified of the number of students
     cy.get('.dropdown-item').click();
 
     professorLogin();
-
+    cy.get('[href="/notification"] > .svg-inline--fa').click();
+    cy.get('tbody > .text-center > :nth-child(1)').should('have.text', courseData[1]);
+    cy.get('tbody > .text-center > :nth-child(3)').should('have.text', '1');
   })
+
 
 
 
@@ -384,6 +376,10 @@ describe('[LSBT1-3]As a teacher I want to access the list of students booked for
 })
 
 describe('[LSBT1-4]As a student I want to get an email confirmation of my booking so that I am informed' , () => {
+
+  
+
+
 
 })
 
