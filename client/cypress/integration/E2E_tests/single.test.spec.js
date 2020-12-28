@@ -162,9 +162,20 @@ function getTodayPlusNString(n){
 
 
 
+function supportOfficerLogin(){
+
+  cy.visit('http://localhost:3000/');
+  cy.url().should('contain' , 'http://localhost:3000/login');
+  cy.contains('Username').click().type('Officer');
+  cy.contains('Password').click().type('pass').type('{enter}');
 
 
+}
 
+function logout(){
+  cy.get('#collasible-nav-dropdown > span').click();
+  cy.get('.dropdown-item').click();
+}
 
 
 
@@ -175,55 +186,41 @@ function getTodayPlusNString(n){
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  it('Student books a lecture then teacher receives notification', () => {
-      
+  it("Support officer updates bookable lectures", () => {
+
     clearDatabase();
-    
-    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
-
-    addCourse(courseData);
-    
-    const studentcourseData = [1,1,1];
-
-    addStudentCourse(studentcourseData);
-
-
-
-
-    
-    // const tomorrowstring = tomorrow.toISOString().slice(0,2);
+      
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science",1,1,"John Smith"];
     const tomorrowstring = getTomorrowString();
     const todaystring = getTodayString();
-    
-    
+      
+      
+      // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+      
+  
+  
+  
+     
+    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
 
-    // const deadlinestring = deadline.toISOString().slice(0,16);
-    const deadlinestring = getTodayPlusNString(1);
-    const nowstring =getTodayString();
-
-
-    // (CourseId, Schedule, BookingDeadline, NotificationDeadline, EndTime, Bookable, Canceled, TeacherId, NotificationAdded, Room ,Seats, Day, Time)
-    
-    const lectureData = [1,todaystring, deadlinestring, nowstring, todaystring , 1, 0, 2, 0, 1, 120, "Mon",  "8:30-11:30"];
-       
     addLecture(lectureData);
+    addCourse(courseData);
+
+    var studentcourseData = [1,1,1];
     
-    cy.visit("http://localhost:3000/");
+    addStudentCourse(studentcourseData);
+
+    supportOfficerLogin();
+    cy.get('[href="/officer/lectureManagement"]').click();
+    cy.get('.btn').click();
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    logout();
     studentLogin(1);
-    cy.contains(courseData[2]).click();
-    cy.contains(courseData[5]); //click();
-    cy.get('Button').contains('Book').click();
-    cy.get('Button').contains('Yes').click();
-    cy.get('Button').contains('Ok').click();
-    cy.get('#collasible-nav-dropdown > span').click();
-    cy.get('.dropdown-item').click();
-
-    professorLogin();
-    cy.get('[href="/notification"] > .svg-inline--fa').click();
-    cy.get('tbody > .text-center > :nth-child(1)').should('have.text', courseData[1]);
-    cy.get('tbody > .text-center > :nth-child(3)').should('have.text', '1');
+    cy.get('.card1').click();
+    cy.get('td').should('have.text', 'No lecture available, please select one course.');
   })
-
 
 
 })

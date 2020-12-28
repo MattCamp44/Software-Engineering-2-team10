@@ -26,6 +26,20 @@ const professorLogin = () => {
 }
 
 
+function supportOfficerLogin(){
+
+  cy.visit('http://localhost:3000/');
+  cy.url().should('contain' , 'http://localhost:3000/login');
+  cy.contains('Username').click().type('Officer');
+  cy.contains('Password').click().type('pass').type('{enter}');
+
+
+}
+
+function logout(){
+  cy.get('#collasible-nav-dropdown > span').click();
+  cy.get('.dropdown-item').click();
+}
 
 function addCourse(courseData){
   cy.request({
@@ -565,6 +579,44 @@ describe('[LSBT1-16]As a booking manager I want to generate a contact tracing re
 })
 
 describe('[LSBT1-17]As a support officer I want to update the list of bookable lectures' , () => {
+
+  it("Support officer updates bookable lectures", () => {
+
+    clearDatabase();
+      
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science",1,1,"John Smith"];
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+      
+      
+      // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+      
+  
+  
+  
+     
+    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+
+    addLecture(lectureData);
+    addCourse(courseData);
+
+    var studentcourseData = [1,1,1];
+    
+    addStudentCourse(studentcourseData);
+
+    supportOfficerLogin();
+    cy.get('[href="/officer/lectureManagement"]').click();
+    cy.get('.btn').click();
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    logout();
+    studentLogin(1);
+    cy.get('.card1').click();
+    cy.get('td').should('have.text', 'No lecture available, please select one course.');
+  })
+
+
 })
 describe('[LSBT1-18]As a teacher I want to record the students present at my lecture among those booked so that I can keep track of actual attendance' , () => {
 })
