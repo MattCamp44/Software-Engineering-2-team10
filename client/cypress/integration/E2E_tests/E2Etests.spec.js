@@ -198,7 +198,7 @@ function getTodayPlusMinutesString(n){
 // 6 OK
 // 7 OK (check button is disabled??)
 // 8  (how? Email?)
-// 9  
+// 9 OK (check button is disabled??)
 // 10
 // 11
 // 12
