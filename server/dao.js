@@ -1306,3 +1306,33 @@ exports.getContactTracingReport = function (userId) {
     });
   });
 };
+
+exports.getOfficerLectures = function (year, sem) {
+  return new Promise((resolve, reject) => {
+    const sql = `select  distinct c.name as CourseName,l.day,l.Time as Time,l.Bookable
+    from lecture l inner join course c on l.CourseId=c.CourseId
+   where c.Year=? and c.Semester=?`;
+    db.all(sql, [year,sem], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+
+exports.changeLectureState = function (type, year, sem) {
+  return new Promise((resolve, reject) => {
+    const sql = `update Lecture set Bookable=?
+    where CourseId in(select CourseId from Course  where Year=? and Semester=? ) `;
+    db.run(sql, [type=="B"?0:1,year,sem], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};

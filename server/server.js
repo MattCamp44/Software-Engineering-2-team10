@@ -468,6 +468,32 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
     });
 });
 
+app.get(BASEURI + '/getOfficerLectures/', (req, res) => {
+    // console.log(req.query.year, req.query.sem)
+    dao.getOfficerLectures(req.query.year, req.query.sem)
+        .then((lectures) => {
+            res.json(lectures);
+        })
+        .catch((err) => {
+            res.status(500).json({
+                errors: [{ 'param': 'Server', 'msg': err }],
+            });
+        });
+});
+
+app.put('/api/changeLectureState', (req, res) => {
+    dao.changeLectureState(req.query.type ,req.query.year, req.query.sem)
+    .then(() => {
+        res.status(200).end();
+    })
+    .catch((err) => {
+        res.status(500).json({
+            errors: [{ 'param': 'Server', 'msg': err }],
+        });
+    });
+});
+
+
 makeCSVArray = (file, type) => {
     fs.readFile(file.path, async (err, data) => {
         if (err) {

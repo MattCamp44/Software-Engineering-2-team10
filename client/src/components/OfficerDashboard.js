@@ -11,13 +11,14 @@ class OfficerDashboard extends React.Component {
     }
 
     componentDidMount() {
-        API.isAuthenticated().then(
-            (user) => {
-                this.setState((state) => ({ authUser: user }));
-            }
-        ).catch((err) => {
-            this.setState({ authErr: err.errorObj });
-        });
+        //NOT NEEDED, ALREADY DONE IN App.js
+        // API.isAuthenticated().then(
+        //     (user) => {
+        //         this.setState({ authUser: user });
+        //     }
+        // ).catch((err) => {
+        //     this.setState({ authErr: err.errorObj });
+        // });
     }
 
     onChangeHandler = event => {
@@ -90,7 +91,7 @@ class OfficerDashboard extends React.Component {
                 >
                     <div className="col-md-6 px-0">
                         <h4 className="display-4 font-italic"><h5>Welcome, {this.props.name}</h5></h4>
-                        <p className="lead my-3">To import the data, please use the uploader below:</p>
+                        <p className="lead my-4">To import the data, please use the uploader below:</p>
                     </div>
                 </div>
                 <Form>
