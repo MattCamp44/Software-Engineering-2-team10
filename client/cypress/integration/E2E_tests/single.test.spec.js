@@ -178,7 +178,18 @@ function logout(){
 }
 
 
+function getTodayPlusMinutesString(n){
 
+  var today = new Date();
+  var newDateObj = moment(today).add(60 + n, 'm').toDate();
+  // today.setTime(today.getTime() + n*36000);
+  
+  
+  return newDateObj.toISOString().slice(0,10) + " " + newDateObj.toISOString().slice(11,16);
+
+
+
+}
 
 
 
@@ -186,42 +197,50 @@ function logout(){
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  it("Support officer updates bookable lectures", () => {
-
+  it("Professor cannot cancel a lecture scheduled for earlier than 1h" , () => {
     clearDatabase();
-      
     //(CourseId,Name,Description,Year,Semester,Teacher)
-    const courseData = [1,"data science","We study a lot of data science",1,1,"John Smith"];
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
     const tomorrowstring = getTomorrowString();
     const todaystring = getTodayString();
-      
-      
-      // const deadlinestring = deadline.toISOString().slice(0,16);
-    const deadlinestring = getTodayPlusNString(5);
-      
-  
-  
-  
-     
-    const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
-
-    addLecture(lectureData);
-    addCourse(courseData);
-
-    var studentcourseData = [1,1,1];
     
-    addStudentCourse(studentcourseData);
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(55);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
 
-    supportOfficerLogin();
-    cy.get('[href="/officer/lectureManagement"]').click();
-    cy.get('.btn').click();
-    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
-    logout();
-    studentLogin(1);
-    cy.get('.card1').click();
-    cy.get('td').should('have.text', 'No lecture available, please select one course.');
-  })
+    cy.get('#bg-nested-dropdown').click();
 
+    cy.get('.dropdown-menu > :nth-child(2)').should('have.attr', 'disabled');
+
+    
+
+    })
+  
 
 })
 

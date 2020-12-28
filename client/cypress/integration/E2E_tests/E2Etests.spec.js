@@ -174,6 +174,44 @@ function getTodayPlusNString(n){
 }
 
 
+function getTodayPlusMinutesString(n){
+
+  var today = new Date();
+  today.setTime(today.getTime() + n*60000);
+  
+  
+  return today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+
+
+
+}
+
+
+
+//Stories
+// 1 OK
+// 2 OK
+// 3 OK
+// 4 
+// 5 OK
+// 6 Work in progress
+// 7
+// 8
+// 9
+// 10
+// 11
+// 12
+// 13 OK
+// 14 OK
+// 15
+// 16
+// 17 OK
+// 18
+// 19
+
+
+
+
 
 
 
@@ -425,7 +463,7 @@ describe('[LSBT1-5]As a student I want to cancel my booking so that I am free' ,
           
           const todaystring = getTodayString();
       
-      
+
             
           const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
     
@@ -453,9 +491,158 @@ describe('[LSBT1-5]As a student I want to cancel my booking so that I am free' ,
 })
 
 describe('[LSBT1-6]As a student I want to access a calendar with all my bookings for the upcoming weeks' , () => {
+
+  it("Student books lecture and checks calendar", () => {
+
+    clearDatabase();
+      
+      //(CourseId,Name,Description,Year,Semester,Teacher)
+      const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+
+      addCourse(courseData);
+      
+      //(StudentCourseId,CourseId,StudentId)
+      var studentcourseData = [1,1,1];
+
+      addStudentCourse(studentcourseData);
+
+      studentcourseData = [2,1,3];
+      addStudentCourse(studentcourseData);
+      
+      
+      const tomorrowstring = getTomorrowString();
+      const todaystring = getTodayString();
+      
+      
+      // const deadlinestring = deadline.toISOString().slice(0,16);
+      const deadlinestring = getTodayPlusNString(5);
+      
+  
+  
+  
+     
+      const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+
+      addLecture(lectureData);
+
+      cy.visit("http://localhost:3000/");
+      studentLogin(1);
+      cy.contains(courseData[2]).click();
+      cy.contains(courseData[5]); //click();
+      cy.get('.btn').should('have.text', 'Book').click();
+      cy.get('Button').contains('Yes').click();
+      cy.get('Button').contains('Ok').click();
+
+
+
+  })
+
+
+
+
 })
 
 describe('[LSBT1-7]As a teacher I want to cancel a lecture up to 1h before its scheduled time' , () => {
+
+
+  it("Professor turns cancels a lecture scheduled for later than 1h" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(65);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+
+    cy.get('.dropdown-menu > :nth-child(2)').click();
+
+    cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to cancel lecture scheduled on ${todayplusminutesstring}?YesNo`);
+
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+
+
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+
+    })
+
+
+  it("Professor cannot cancel a lecture scheduled for earlier than 1h" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(55);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+
+
+    //I should check that it is greyed out
+    cy.get('.dropdown-menu > :nth-child(2)');
+
+   
+
+    })
+
+
 })
 
 describe('[LSBT1-8]As a student I want to get notified when a lecture is cancelled' , () => {
@@ -484,7 +671,8 @@ describe('[LSBT1-12]As a support officer I want to upload the list of students, 
 describe('[LSBT1-13]As a student I want to be put in a waiting list when no seats are available in the required lecture' , () => {
 
   it('Student gets reservation', () =>
-{  clearDatabase();
+{  
+      clearDatabase();
       
       //(CourseId,Name,Description,Year,Semester,Teacher)
       const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
@@ -535,7 +723,6 @@ describe('[LSBT1-13]As a student I want to be put in a waiting list when no seat
       cy.get('.custom-ui-warning > button').should('have.text','Ok').click();
 
 
-      //Does not work, maybe has been taken away?
 
       cy.get('.btn').should('have.text','Waiting list');
 }
