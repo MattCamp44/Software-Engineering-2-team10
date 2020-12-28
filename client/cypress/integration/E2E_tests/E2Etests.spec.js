@@ -177,10 +177,11 @@ function getTodayPlusNString(n){
 function getTodayPlusMinutesString(n){
 
   var today = new Date();
-  today.setTime(today.getTime() + n*60000);
+  var newDateObj = moment(today).add(60 + n, 'm').toDate();
+  // today.setTime(today.getTime() + n*36000);
   
   
-  return today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
+  return newDateObj.toISOString().slice(0,10) + " " + newDateObj.toISOString().slice(11,16);
 
 
 
@@ -195,7 +196,7 @@ function getTodayPlusMinutesString(n){
 // 4 
 // 5 OK
 // 6 Work in progress
-// 7
+// 7 OK (check button is disabled??)
 // 8
 // 9
 // 10
@@ -532,7 +533,8 @@ describe('[LSBT1-6]As a student I want to access a calendar with all my bookings
       cy.get('.btn').should('have.text', 'Book').click();
       cy.get('Button').contains('Yes').click();
       cy.get('Button').contains('Ok').click();
-
+      cy.get('[href="/BookingHistory"]').click();
+      cy.get('.fc-event-title').should('have.text', courseData[1]);
 
 
   })

@@ -197,49 +197,51 @@ function getTodayPlusMinutesString(n){
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  it("Professor cannot cancel a lecture scheduled for earlier than 1h" , () => {
+  it("Student books lecture and checks calendar", () => {
+
     clearDatabase();
-    //(CourseId,Name,Description,Year,Semester,Teacher)
-    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
-  
-    addCourse(courseData);
-    
-    //(StudentCourseId,CourseId,StudentId)
-    var studentcourseData = [1,1,1];
-  
-    addStudentCourse(studentcourseData);
-  
-    studentcourseData = [2,1,3];
-    addStudentCourse(studentcourseData);
-    
-    
-    const tomorrowstring = getTomorrowString();
-    const todaystring = getTodayString();
-    
-    
-    // const deadlinestring = deadline.toISOString().slice(0,16);
-    const deadlinestring = getTodayPlusNString(5);
-    
-    // In more than one hour
-    const todayplusminutesstring = getTodayPlusMinutesString(55);
-  
-  
-   
-    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
-  
-    addLecture(lectureData);
-  
-    professorLogin();
-  
-    cy.get('.btn > .svg-inline--fa').click();
+      
+      //(CourseId,Name,Description,Year,Semester,Teacher)
+      const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
 
-    cy.get('#bg-nested-dropdown').click();
+      addCourse(courseData);
+      
+      //(StudentCourseId,CourseId,StudentId)
+      var studentcourseData = [1,1,1];
 
-    cy.get('.dropdown-menu > :nth-child(2)').should('have.attr', 'disabled');
+      addStudentCourse(studentcourseData);
 
-    
+      studentcourseData = [2,1,3];
+      addStudentCourse(studentcourseData);
+      
+      
+      const tomorrowstring = getTomorrowString();
+      const todaystring = getTodayString();
+      
+      
+      // const deadlinestring = deadline.toISOString().slice(0,16);
+      const deadlinestring = getTodayPlusNString(5);
+      
+  
+  
+  
+     
+      const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
 
-    })
+      addLecture(lectureData);
+
+      cy.visit("http://localhost:3000/");
+      studentLogin(1);
+      cy.contains(courseData[2]).click();
+      cy.contains(courseData[5]); //click();
+      cy.get('.btn').should('have.text', 'Book').click();
+      cy.get('Button').contains('Yes').click();
+      cy.get('Button').contains('Ok').click();
+      cy.get('[href="/BookingHistory"]').click();
+      cy.get('.fc-event-title').should('have.text', courseData[1]);
+
+
+  })
   
 
 })
