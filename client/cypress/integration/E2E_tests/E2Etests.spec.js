@@ -193,12 +193,12 @@ function getTodayPlusMinutesString(n){
 // 1 OK
 // 2 OK
 // 3 OK
-// 4 
+// 4  (how? Email?)
 // 5 OK
-// 6 Work in progress
+// 6 OK
 // 7 OK (check button is disabled??)
-// 8
-// 9
+// 8  (how? Email?)
+// 9  
 // 10
 // 11
 // 12
@@ -547,7 +547,7 @@ describe('[LSBT1-6]As a student I want to access a calendar with all my bookings
 describe('[LSBT1-7]As a teacher I want to cancel a lecture up to 1h before its scheduled time' , () => {
 
 
-  it("Professor turns cancels a lecture scheduled for later than 1h" , () => {
+  it("Professor cancels a lecture scheduled for later than 1h" , () => {
     clearDatabase();
     //(CourseId,Name,Description,Year,Semester,Teacher)
     const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
@@ -651,6 +651,101 @@ describe('[LSBT1-8]As a student I want to get notified when a lecture is cancell
 })
 
 describe('[LSBT1-9]As a teacher I want to turn a presence lecture into a distance one up to 30 mins before its scheduled time' , () => {
+
+  it("Professor turns a lecture scheduled for later than 30 minutes online" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(35);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+
+    cy.get('.dropdown-menu > :nth-child(1)').click();
+
+    cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to make lecture scheduled on ${todayplusminutesstring} online?YesNo`);
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'No');
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+
+    })
+
+
+  it("Professor cannot turn a lecture scheduled for earlier than 30 minutes online" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(25);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+    cy.get('thead > tr > :nth-child(4)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'Yes');
+   
+
+    })
+
+
+
 })
 
 describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better' , () => {

@@ -197,51 +197,107 @@ function getTodayPlusMinutesString(n){
 
 describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
   
-  it("Student books lecture and checks calendar", () => {
-
+  it("Professor turns a lecture into distance scheduled for later than 30 minutes" , () => {
     clearDatabase();
-      
-      //(CourseId,Name,Description,Year,Semester,Teacher)
-      const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
-
-      addCourse(courseData);
-      
-      //(StudentCourseId,CourseId,StudentId)
-      var studentcourseData = [1,1,1];
-
-      addStudentCourse(studentcourseData);
-
-      studentcourseData = [2,1,3];
-      addStudentCourse(studentcourseData);
-      
-      
-      const tomorrowstring = getTomorrowString();
-      const todaystring = getTodayString();
-      
-      
-      // const deadlinestring = deadline.toISOString().slice(0,16);
-      const deadlinestring = getTodayPlusNString(5);
-      
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(35);
   
   
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
   
-     
-      const lectureData = [1,todaystring, deadlinestring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
 
-      addLecture(lectureData);
+    cy.get('#bg-nested-dropdown').click();
 
-      cy.visit("http://localhost:3000/");
-      studentLogin(1);
-      cy.contains(courseData[2]).click();
-      cy.contains(courseData[5]); //click();
-      cy.get('.btn').should('have.text', 'Book').click();
-      cy.get('Button').contains('Yes').click();
-      cy.get('Button').contains('Ok').click();
-      cy.get('[href="/BookingHistory"]').click();
-      cy.get('.fc-event-title').should('have.text', courseData[1]);
+    cy.get('.dropdown-menu > :nth-child(1)').click();
+
+    cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to make lecture scheduled on ${todayplusminutesstring} online?YesNo`);
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'No');
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+
+    })
 
 
-  })
+  it("Professor cannot turn a lecture scheduled for earlier than 30 minutes" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(25);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+    cy.get('thead > tr > :nth-child(4)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'Yes');
+    // cy.get('[disabled]');
+
+    // cy.get('.dropdown-menu > :nth-child(1)').click();
+
+    // cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to make lecture scheduled on ${todayplusminutesstring} online?YesNo`);
+    // cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    // cy.get('tbody > tr > :nth-child(4)').should('have.text', 'Yes');
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+   
+
+    })
+
   
 
 })
