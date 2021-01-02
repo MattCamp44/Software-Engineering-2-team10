@@ -29,7 +29,7 @@ if (process.env.npm_config_test === "true") {
 
 }
 else {
-    dao.setDb("db/PULSeBS_test.db");
+    dao.setDb("db/PULSeBS.db");
 }
 
 let app = new express();
@@ -504,6 +504,22 @@ makeCSVArray = (file, type) => {
         dao.importCSVData(csvData, type);
     })
 }
+
+app.get('/api/getPresenceHistory/:courseId/:startDate/:endDate', (req, res) => {
+    dao.getPresenceHistory(req.params.courseId, req.params.startDate, req.params.endDate, req.user.username)
+        .then((row) => {
+            if (!row) {
+                res.status(500).send();
+            } else {
+                res.json(row);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                errors: [{ 'param': 'Server', 'msg': err }],
+            });
+        });
+});
 
 module.exports = app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}/`);

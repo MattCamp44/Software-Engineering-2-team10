@@ -3,6 +3,7 @@
 const StudentCourse = require("./Entities/StudentCourse");
 const LecturesSchedule = require("./Entities/LecturesSchedule");
 const BookingHistory = require("./Entities/BookingHistory");
+const PresenceHistory = require("./Entities/PresenceHistory");
 
 const sqlite = require("sqlite3");
 const bcrypt = require("bcrypt");
@@ -53,6 +54,14 @@ const createBookingHistory = function (row) {
     row.BookingDeadline,
     row.CourseId,
     row.LectureId
+  );
+};
+
+const createPresenceHistory = function (row) {
+  return new PresenceHistory(
+    row.BookCounts,
+    row.PresenceCount,
+    row.AbsenceCount
   );
 };
 
@@ -1336,3 +1345,35 @@ exports.changeLectureState = function (type, year, sem) {
     });
   });
 };
+
+
+ /**
+  * Get Presence History
+  */
+ exports.getPresenceHistory = function (courseId, startDate, endDate, userId) {
+  //X
+  return new Promise((resolve, reject) => {
+
+    const sql = `select BookCounts, PresenceCount,AbsenceCount
+    from StudentAttendance
+    where Schedule BETWEEN '${startDate}' and '${endDate}'
+    and CourseId='${courseId}' and TeacherId='${userId}'   
+        `;
+
+    db.all(
+      sql,
+      [],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else if (rows.length === 0) {
+          resolve(undefined);
+        } else {
+          //   console.log(rows);
+          let data = rows.map((row) => createPresenceHistory(row));
+          resolve(data);
+        }
+      }
+    );
+  });
+}; 

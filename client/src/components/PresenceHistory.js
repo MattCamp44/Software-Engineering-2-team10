@@ -13,6 +13,7 @@ class PresenceHistory extends React.Component {
     constructor() {
         super();
         this.state = {
+            bookCount: 0,
             courses: [],
             history: [],
             selectedCourse: null,
@@ -25,8 +26,8 @@ class PresenceHistory extends React.Component {
                     width: 380,
                     type: 'pie',
                 },
-                labels: ['Book Count', 'Presence Count', 'Absence Count'],
-                colors : ['#ff6f00', '#008ffb', '#0bb596'],
+                labels: ['Presence Count', 'Absence Count'],
+                colors: ['#008ffb', '#0bb596'],
                 responsive: [{
                     breakpoint: 480,
                     options: {
@@ -53,13 +54,6 @@ class PresenceHistory extends React.Component {
                 API.isAuthenticated()
                     .then((user) => {
                         this.setState((state) => ({ authUser: user }));
-                        API.getStudentCurrentCourses(this.state.authUser.userId)
-                            .then((c) => {
-                                this.setState({ courses: c });
-                            })
-                            .catch((errorObj) => {
-                                console.log(errorObj);
-                            });
                     })
                     .catch((err) => {
                         this.setState({ authErr: err.errorObj });
@@ -110,26 +104,31 @@ class PresenceHistory extends React.Component {
                     history: data
                 });
                 if (data.length > 0) {
-                    let series = [data[0].bookCount, data[0].presenceCount, data[0].absenceCount];
+                    let bookCount = data[0].bookCount;
+                    this.setState({ bookCount });
+                    // "Book Count " + "#" + data[0].bookCount, 
+                    let series = [data[0].presenceCount, data[0].absenceCount];
                     console.log(series);
                     this.setState({ series });
                     let options = { ...this.state.options };
-                    options.labels = ["Book Count " + "#" + data[0].bookCount, "Presence Count " + "#" + data[0].presenceCount, "Absence Count " + "#" + data[0].absenceCount];
+                    options.labels = ["Presence Count " + "#" + data[0].presenceCount, "Absence Count " + "#" + data[0].absenceCount];
                     this.setState({ options });
                 } else {
+                    this.setState({ bookCount: 0 });
                     let series = [];
                     this.setState({ series });
                     let options = { ...this.state.options };
-                    options.labels = ["Book Count N/A", "Presence Count - N/A", "Absence Count - N/A"];
+                    options.labels = ["Presence Count - N/A", "Absence Count - N/A"];
                     this.setState({ options });
                 }
             })
             .catch((errorObj) => {
                 console.log(errorObj);
-                let series = [0,0,0];
+                this.setState({ bookCount: 0 });
+                let series = [0, 0];
                 this.setState({ series });
                 let options = { ...this.state.options };
-                options.labels = ["Book Count N/A", "Presence Count - N/A", "Absence Count - N/A"];
+                options.labels = ["Presence Count - N/A", "Absence Count - N/A"];
                 this.setState({ options });
             });
     }
@@ -197,7 +196,7 @@ class PresenceHistory extends React.Component {
                                 </div>
                                 <div className="mixed-chart col-md-10 mt-4">
                                     <label style={{ margin: "0 auto" }}>
-                                        {this.state.selectedCourse === null ? "" : this.state.selectedCourse}
+                                        {this.state.selectedCourse === null ? "" : this.state.selectedCourse + " --- " + "Book Count: " + this.state.bookCount }
                                     </label>
                                     <Chart options={this.state.options} series={this.state.series} type="pie" width={380} />
                                     {/* <Table striped bordered hover variant="white">
