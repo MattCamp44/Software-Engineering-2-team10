@@ -209,6 +209,13 @@ describe("officer REST API", function () {
   });
   
   it("uploadDataCSV", async () => {});
+
+  it("changeLectureState", async () => {
+    const response = await request
+      .put("/api/changeLectureState?type=B&year=1&sem=1")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
 });
 
 describe("student REST API", function () {
@@ -258,6 +265,13 @@ describe("teacher REST API", function () {
   it("cancelLecture", async () => {
     const response = await request
       .post("/api/cancelLecture/2")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+
+  it("updatePresence", async () => {
+    const response = await request
+      .post("/api/updatepresence/101/1")
       .set("Cookie", session);
     expect(response.status).toBe(200);
   });

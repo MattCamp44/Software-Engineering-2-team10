@@ -1340,7 +1340,7 @@ exports.changeLectureState = function (type, year, sem) {
       if (err) {
         reject(err);
       } else {
-        resolve(rows);
+        resolve(true);
       }
     });
   });
@@ -1353,7 +1353,7 @@ exports.changeLectureState = function (type, year, sem) {
  exports.getPresenceHistory = function (courseId, startDate, endDate, userId) {
   //X
   return new Promise((resolve, reject) => {
-
+    
     const sql = `select BookCounts, PresenceCount,AbsenceCount
     from StudentAttendance
     where Schedule BETWEEN '${startDate}' and '${endDate}'

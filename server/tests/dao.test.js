@@ -252,6 +252,20 @@ describe("check Teacher Dashboard", () => {
       expect(data).toEqual(true);
     });
   });
+});
+
+describe("check Teacher Stats", () => {
+  beforeAll(() => {
+    clearLectures();
+    initLectures();
+    initCourses();
+    return initBooking();
+  });
+  afterAll(() => {
+    clearLectures();
+    clearCourses();
+    return clearBooking();
+  });
 
   test("test getTeacherStats1", () => {
     return dao
@@ -363,8 +377,53 @@ describe("check Contact tracing", () => {
   });
 });
 
+describe("check Courses", () => {
+  beforeAll(() => {
+    clearCourses();
+    return initCourses();
+  });
+  afterAll(() => {
+    return clearCourses();
+  });
 
+  test("test updatePresence", () => {
+    return dao.updatePresence(101,1).then((data) => {
+      expect(data).toBe(true);
+    });
+  });
 
+});
+
+describe("check Officer Management", () => {
+  beforeAll(() => {
+    clearLectures();
+    initLectures();
+    initCourses();
+    return initBooking();
+  });
+  afterAll(() => {
+    clearLectures();
+    clearCourses();
+    return clearBooking();
+  });
+
+  test("test getOfficerLectures", () => {
+    return dao
+      .getOfficerLectures(1, 1)
+      .then((data) => {
+        expect(data.length > 0);
+      });
+  });
+
+  test("test changeLectureState", () => {
+    return dao
+      .changeLectureState("B", 1, 1)
+      .then((data) => {
+        expect(data).toBe(true);
+      });
+  });
+  
+});
 
 
 
