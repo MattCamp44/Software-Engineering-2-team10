@@ -450,12 +450,13 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
         }
     })
     var upload = multer({ storage: storage }).any();
-
+    debugger;
     upload(req, res, function (err) {
         if (err) {
             console.log(err);
             return res.end("Error uploading file.");
         } else {
+            debugger;
             req.files.forEach(function (f) {
                 fs.rename(f.path,
                     "upload/" + req.body.importType + ".csv", function (err) {
@@ -512,7 +513,7 @@ app.get('/api/getPresenceHistory/:courseId/:startDate/:endDate', (req, res) => {
     dao.getPresenceHistory(req.params.courseId, req.params.startDate, req.params.endDate, req.user.username)
         .then((row) => {
             if (!row) {
-                res.status(500).send();
+                res.json([{"bookCount": '0', "presenceCount": '0', 'absenceCount': '0'}])
             } else {
                 res.json(row);
             }

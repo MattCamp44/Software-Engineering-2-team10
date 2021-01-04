@@ -345,6 +345,15 @@ describe("check Teacher Stats", () => {
         expect(data.length > 0);
       });
   });
+
+  test("test getPresenceHistory", () => {
+    debugger;
+    return dao
+      .getPresenceHistory("XY1112", "2020-12-01", "2020-12-18","902811")
+      .then((data) => {
+        expect(data.length > 0);
+      });
+  });
 });
 
 describe("check Contact tracing", () => {
