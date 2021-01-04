@@ -54,7 +54,7 @@ describe("dao test functions", () => {
   
       //(BookingId,StudentId,LectureId,Presence,Canceled,Reserved,CancelDate,ReserveDate,BookDate)
   
-      const bookingData = [1,1,1,null,0,0,"2020-01-10","2020-01-10","2020-01-10","2020-01-10"];
+      const bookingData = [1,1,1,null,0,0,"2020-01-10","2020-01-10","2020-01-10"];
   
       dao.addBooking(bookingData).then(
         (data) => {
@@ -83,7 +83,7 @@ describe("dao test functions", () => {
   
       const lectureData = [1,"2020-01-10","2020-01-10","2020-01-10","2020-01-10",1,0,1,0,1,1,"Mon","2020-01-10"];
   
-      dao.addStudentCourse(lectureData).then(
+      dao.addLecture(lectureData).then(
         (data) => {
           expect(data === null);
         }

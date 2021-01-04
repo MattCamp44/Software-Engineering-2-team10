@@ -208,6 +208,14 @@ describe("officer REST API", function () {
     const response = await request.get("/api/getPositiveStudents").set("Cookie", session);
     expect(response.status).toBe(200);
   });
+
+  it("changeLectureState", async () => {
+    const response = await request
+      .put("/api/changeLectureState?type=B&year=1&sem=1")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+
 });
 
 describe("student REST API", function () {
@@ -257,6 +265,13 @@ describe("teacher REST API", function () {
   it("cancelLecture", async () => {
     const response = await request
       .post("/api/cancelLecture/2")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+
+  it("updatePresence", async () => {
+    const response = await request
+      .post("/api/updatepresence/101/1")
       .set("Cookie", session);
     expect(response.status).toBe(200);
   });
@@ -431,31 +446,6 @@ describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
   const professors = `${__dirname}/testFiles/Professors.csv`;
   const schedule = `${__dirname}/testFiles/Schedule.csv`;
   const students = `${__dirname}/testFiles/Students.csv`;
-  // it('insert rows of the file to the Courses table', async() => {
-  //   // Test if the test file is exist
-  //   debugger;
-  //   fs.exists(filePath)
-  //     .then((exists) => {
-  //       if (!exists) throw new Error('file does not exist');
-
-  //       const response = request
-  //         .post('/api/uploadDataCSV')
-  //         // Attach the file with key 'file' which is corresponding to your endpoint setting. 
-  //         .attach('file', filePath)
-  //         .then((res) => {
-  //           const { success, message, filePath } = res.body;
-  //           expect(success).toBeTruthy();
-  //           expect(message).toBe('Uploaded successfully');
-  //           expect(typeof filePath).toBeTruthy();
-  //           // store file data for following tests
-  //           testFilePath = filePath; 
-  //         })
-  //         .catch(err => {
-  //           debugger;
-  //           console.log(err)
-  //         });
-  //     })
-  // })
 
   it("uploadDataCSV Courses", async () => {
     const response = await request

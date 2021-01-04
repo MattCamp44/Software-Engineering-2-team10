@@ -16,3 +16,4 @@ server/upload
 .DS_Store
 
 
+server/db/PULSeBS_test_clear.db

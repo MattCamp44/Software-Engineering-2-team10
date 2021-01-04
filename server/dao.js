@@ -1091,6 +1091,7 @@ exports.importCSVData = function (data, type) {
 };
 
 exports.clearDatabase = function () {
+  
   return new Promise((resolve, reject) => {
     
     const sql =
@@ -1100,8 +1101,8 @@ exports.clearDatabase = function () {
     //console.log("Clearing database");
     db.run(sql, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1111,8 +1112,8 @@ exports.clearDatabase = function () {
     "DELETE from Lecture"; 
     db.run(sqlLecture, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1122,8 +1123,8 @@ exports.clearDatabase = function () {
     "DELETE from Booking"; 
     db.run(sqlBooking, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1133,8 +1134,8 @@ exports.clearDatabase = function () {
     "DELETE from Class"; 
     db.run(sqlClass, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1145,8 +1146,8 @@ exports.clearDatabase = function () {
     "DELETE from StudentCourse"; 
     db.run(sqlStudentCourse, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1157,8 +1158,8 @@ exports.clearDatabase = function () {
     "DELETE from TeacherNotification"; 
     db.run(sqlTeacherNotification, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1170,8 +1171,8 @@ exports.clearDatabase = function () {
     "DELETE from user where UserId>23"; 
     db.run(sqlUser, (err) => {
       if (err) {
-        console.log("DB failed clearing database");
-        console.log(err);
+        // console.log("DB failed clearing database");
+        // console.log(err);
         reject(err);
         
       } else resolve(null);
@@ -1181,105 +1182,6 @@ exports.clearDatabase = function () {
   });
 };
 
-exports.addCourse = function (data) {
-  return new Promise((resolve, reject) => {
-    if (process.env.npm_config_test !== "true") {
-      console.log("Tried clearing production database");
-      reject("ClearProductionDB");
-    }
-    
-    let sql = `insert into Course (CourseId,Name,Description,Year,Semester,Teacher) values (?, ?, ?, ?, ?, ?)                  
-    `;
-    db.run(sql, [...data], (err) => {
-      if (err) {
-      console.log(err);
-      console.log("DB failed adding course");
-      reject(err);
-    } else {
-      console.log("DAO resolved");
-      resolve(null);}
-  });
-
-  });
-};
-
-exports.addCourse = function (data) {
-  return new Promise((resolve, reject) => {
-    // if (process.env.npm_config_test !== "true") {
-    //   reject("ClearProductionDB");
-    // }
-
-    let sql = `insert into Course (CourseId,Name,Description,Year,Semester,Teacher) values (?, ?, ?, ?, ?, ?)                  
-      `;
-    db.run(sql, [...data], (err) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      } else {
-        resolve(null);
-      }
-    });
-  });
-};
-
-exports.addBooking = function (data) {
-  return new Promise((resolve, reject) => {
-    // if (process.env.npm_config_test !== "true") {
-    //   reject("ClearProductionDB");
-    // }
-    
-    let sql = `insert into Booking (BookingId,StudentId,LectureId,Presence,Canceled,Reserved,CancelDate,ReserveDate,BookDate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)                  
-    `;
-    db.run(sql, [...data], (err) => {
-      if (err) {
-      reject(err);
-    } else {
-      resolve(null);}
-  });
-});
-};
-
-
-
-
-exports.addStudentCourse = function (data) {
-  return new Promise((resolve, reject) => {
-    // if (process.env.npm_config_test !== "true") {
-    //   reject("ClearProductionDB");
-    // }
-    
-    let sql = `insert into StudentCourse (StudentCourseId,CourseId,StudentId) values (?, ?, ?)                  
-    `;
-    db.run(sql, [...data], (err) => {
-      if (err) {
-        console.log(err);
-      reject(err);
-    } else {
-      resolve(null);}
-  });
-});
-};
-
-
-
-exports.addLecture = function (data) {
-  return new Promise((resolve, reject) => {
-    // if (process.env.npm_config_test !== "true") {
-    //   reject("ClearProductionDB");
-    // }
-
-    let sql = `insert into Lecture (CourseId, Schedule,
-      BookingDeadline, NotificationDeadline, EndTime,
-      Bookable, Canceled, TeacherId, NotificationAdded, Room ,Seats, Day, Time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)                  
-    `;
-
-    db.run(sql, [...data], (err) => {
-      if (err) {
-        reject(err);
-      } else resolve(null);
-    });
-  });
-};
 
 exports.getPositiveStudents = function (userId, name, lastName) {
   return new Promise((resolve, reject) => {
@@ -1340,7 +1242,7 @@ exports.changeLectureState = function (type, year, sem) {
       if (err) {
         reject(err);
       } else {
-        resolve(rows);
+        resolve(true);
       }
     });
   });
@@ -1353,7 +1255,7 @@ exports.changeLectureState = function (type, year, sem) {
  exports.getPresenceHistory = function (courseId, startDate, endDate, userId) {
   //X
   return new Promise((resolve, reject) => {
-
+    
     const sql = `select BookCounts, PresenceCount,AbsenceCount
     from StudentAttendance
     where Schedule BETWEEN '${startDate}' and '${endDate}'
@@ -1377,3 +1279,92 @@ exports.changeLectureState = function (type, year, sem) {
     );
   });
 }; 
+
+
+//support functions 
+exports.addCourse = function (data) {
+  return new Promise((resolve, reject) => {
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
+
+    let sql = `insert into Course (CourseId,Name,Description,Year,Semester,Teacher) values (?, ?, ?, ?, ?, ?)                  
+      `;
+    db.run(sql, [...data], (err) => {
+       
+      if (err) {
+        // console.log(err);
+        // console.log("addcourse");
+        reject(err);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+};
+
+exports.addBooking = function (data) {
+  
+  return new Promise((resolve, reject) => {
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
+    
+    let sql = `insert into Booking (BookingId,StudentId,LectureId,Presence,Canceled,Reserved,CancelDate,ReserveDate,BookDate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)                  
+    `;
+    db.run(sql, [...data], (err) => {
+       
+      if (err) {
+      reject(err);
+    } else {
+      resolve(null);}
+  });
+});
+};
+
+
+
+
+exports.addStudentCourse = function (data) {
+  
+  return new Promise((resolve, reject) => {
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
+    
+    let sql = `insert into StudentCourse (StudentCourseId,CourseId,StudentId) values (?, ?, ?)                  
+    `;
+    db.run(sql, [...data], (err) => {
+       
+      if (err) {
+        //  console.log(err);
+        //  console.log("Add studentcourse");
+      reject(err);
+    } else {
+      resolve(null);}
+  });
+});
+};
+
+
+
+exports.addLecture = function (data) {
+  
+  return new Promise((resolve, reject) => {
+    // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
+
+    let sql = `insert into Lecture (CourseId, Schedule,
+      BookingDeadline, NotificationDeadline, EndTime,
+      Bookable, Canceled, TeacherId, NotificationAdded, Room ,Seats, Day, Time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)                  
+    `;
+
+    db.run(sql, [...data], (err) => {
+       
+      if (err) {
+        reject(err);
+      } else resolve(null);
+    });
+  });
+};

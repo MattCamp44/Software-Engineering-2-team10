@@ -33,14 +33,21 @@ let db = new sqlite.Database("db/PULSeBS_test_clear.db", (err) => {
     it("addCourse", async () => {
   
   
-      const courseData = [5345,"Computer Networks","We study a lot of network","2020",1,"John Smith"];
+      const courseData = {courseID: "5345",
+      courseName: "Computer Networks",
+      courseDescription: "We study a lot of network",
+      courseYear: "2020",
+      courseSem: "1",
+      courseTeacher:"John Smith"};
+      
       const response = await request.post("/api/addcourse/", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ data: courseData }),
+        body: JSON.stringify(courseData)
       })
+      
       expect(response.status).toBe(200);
   
   
