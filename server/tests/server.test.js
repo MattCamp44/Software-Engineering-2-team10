@@ -439,7 +439,6 @@ clearCourses = () => {
   });
 };
 
-let testFilePath = null;
 describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
   const courses = `${__dirname}/testFiles/Courses.csv`;
   const enrollment = `${__dirname}/testFiles/Enrollment.csv`;
@@ -493,5 +492,3 @@ describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
     expect(response.status).toBe(200);
   });
 })
-
-app.close();
