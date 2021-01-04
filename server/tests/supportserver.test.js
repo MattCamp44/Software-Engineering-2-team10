@@ -79,3 +79,56 @@
   
   })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////////////////////////////
+  it("addCourse", async () => {
+
+    clearAddCourse();
+
+    const courseData = ["1","data science","We study a lot of data science","2020",1,"John Smith"];
+    
+    const response = await request.post("/api/addcourse/")
+    .send({data : courseData})
+    .expect(200);
+    
+    expect(response.status).toBe(200);
+  })
+  
+  
+  it("addbooking", async () => {
+
+    clearBooking();
+
+    const bookingData = [1000,3,1,null,null,null,null,null,"2020-12-14 10:00"];
+    
+    const response = await request.post("/api/addbooking/")
+    .send({data : bookingData})
+    .expect(200);
+    
+    expect(response.status).toBe(200);
+  })
+  
+  it("addstudentcourse", async () => {
+
+    clearCourses();
+
+    const studentcourseData = [101,"AAAAAA",1];
+    
+    const response = await request.post("/api/addstudentcourse/")
+    .send({data : studentcourseData})
+    .expect(200);
+    
+    expect(response.status).toBe(200);
+  })

@@ -1296,7 +1296,6 @@ exports.addCourse = function (data) {
          console.log(err);
          reject(err);
         } else {
-        console.log("addcourse");
         resolve(null);
       }
     });
