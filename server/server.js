@@ -73,12 +73,15 @@ app.post(BASEURI + '/logout', (req, res) => {
 
 
 app.post(BASEURI + '/addcourse/', (req, res) => {
+    console.log("Data at server:" + req.body.data);
+    console.log("Entire request at server:" + req.body.header);
     dao.addCourse(req.body.data)
         .then(() => {
             console.log("Server resolved");
             res.status(200).end();
         })
         .catch((err) => {
+            console.log("Err:" + err);
             res.status(500).json({
                 errors: [{ 'param': 'Server', 'msg': err }],
             });

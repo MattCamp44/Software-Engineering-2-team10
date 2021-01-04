@@ -7,6 +7,8 @@ let moment = require("moment");
 
 let session;
 
+const APIURL = "api";
+
 beforeAll((done) => {
   dao.setDb("db/PULSeBS_test.db");
 
@@ -308,6 +310,38 @@ describe("lecture REST API", function () {
     expect(response.status).toBe(200);
   });
 });
+
+describe("Server E2E test functions" , () => {
+  // beforeAll(() => {
+  //   dao.clearDatabase();
+    
+  // });
+  // afterAll(() => {
+  //   dao.clearDatabase();
+  // });
+
+  it("addCourse", async () => {
+
+
+    const courseData = ["1","data science","We study a lot of data science","2020",1,"John Smith"];
+    
+    const response = await request.post("/api/addcourse/")
+    .send({data : courseData})
+    .expect(200);
+    
+  })
+
+    
+})
+
+
+
+
+
+
+
+
+
 
 ///getTeacherStats/:period/:userId/:startDate/:endDate/:courseId
 

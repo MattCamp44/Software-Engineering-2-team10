@@ -1293,10 +1293,10 @@ exports.addCourse = function (data) {
     db.run(sql, [...data], (err) => {
        
       if (err) {
-        // console.log(err);
-        // console.log("addcourse");
-        reject(err);
-      } else {
+         console.log(err);
+         reject(err);
+        } else {
+        console.log("addcourse");
         resolve(null);
       }
     });
