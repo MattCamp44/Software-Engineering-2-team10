@@ -5,6 +5,7 @@ const dao = require("../dao.js");
 const sqlite = require("sqlite3");
 let moment = require("moment");
 
+
 let session;
 
 beforeAll((done) => {
@@ -190,14 +191,14 @@ describe("officer REST API", function () {
     return clearCourses();
   });
 
-  it("logout", async () => {});
+  it("logout", async () => { });
 
-  
+
   it("getAttendanceStatistics", async () => {
     const response = await request.get("/api/getAttendanceStatistics/D/2020-12-01/2020-12-18").set("Cookie", session);
     expect(response.status).toBe(200);
   });
-  
+
   it("getContactTracingReport", async () => {
     const response = await request.get("/api/getContactTracingReport/1").set("Cookie", session);
     expect(response.status).toBe(200);
@@ -207,8 +208,6 @@ describe("officer REST API", function () {
     const response = await request.get("/api/getPositiveStudents").set("Cookie", session);
     expect(response.status).toBe(200);
   });
-  
-  it("uploadDataCSV", async () => {});
 });
 
 describe("student REST API", function () {
@@ -225,13 +224,13 @@ describe("student REST API", function () {
     return clearCourses();
   });
 
-  it("logout", async () => {});
+  it("logout", async () => { });
 
   it("getAllCourses", async () => {
     const response = await request.get("/api/getAllCourses").set("Cookie", session);
     expect(response.status).toBe(200);
   });
-  
+
 });
 
 describe("teacher REST API", function () {
@@ -316,7 +315,6 @@ initLectures = () => {
       NotificationAdded)
    VALUES ('XY0422','${day}', 1, '${deadline}', date("now"), 1, 1, 0, 2, 120,0),('XY0422','${day}', 1, '${deadline}', date("now"), 1, 2, 0, 2, 0,0)
     `;
-
     db.run(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -425,3 +423,85 @@ clearCourses = () => {
     });
   });
 };
+
+let testFilePath = null;
+describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
+  const courses = `${__dirname}/testFiles/Courses.csv`;
+  const enrollment = `${__dirname}/testFiles/Enrollment.csv`;
+  const professors = `${__dirname}/testFiles/Professors.csv`;
+  const schedule = `${__dirname}/testFiles/Schedule.csv`;
+  const students = `${__dirname}/testFiles/Students.csv`;
+  // it('insert rows of the file to the Courses table', async() => {
+  //   // Test if the test file is exist
+  //   debugger;
+  //   fs.exists(filePath)
+  //     .then((exists) => {
+  //       if (!exists) throw new Error('file does not exist');
+
+  //       const response = request
+  //         .post('/api/uploadDataCSV')
+  //         // Attach the file with key 'file' which is corresponding to your endpoint setting. 
+  //         .attach('file', filePath)
+  //         .then((res) => {
+  //           const { success, message, filePath } = res.body;
+  //           expect(success).toBeTruthy();
+  //           expect(message).toBe('Uploaded successfully');
+  //           expect(typeof filePath).toBeTruthy();
+  //           // store file data for following tests
+  //           testFilePath = filePath; 
+  //         })
+  //         .catch(err => {
+  //           debugger;
+  //           console.log(err)
+  //         });
+  //     })
+  // })
+
+  it("uploadDataCSV Courses", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', courses)
+      .field('importType', 'Courses')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+  it("uploadDataCSV Enrollment", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', enrollment)
+      .field('importType', 'Enrollment')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+  it("uploadDataCSV Professors", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', professors)
+      .field('importType', 'Professors')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+  it("uploadDataCSV Schedule", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', schedule)
+      .field('importType', 'Schedule')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+  it("uploadDataCSV Students", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', students)
+      .field('importType', 'Students')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+})
+
+app.close();
