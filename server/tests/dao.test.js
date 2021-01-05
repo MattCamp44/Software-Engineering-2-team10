@@ -435,6 +435,107 @@ describe("check Officer Management", () => {
 });
 
 
+describe("check importCSVData Students", () => {
+  beforeAll(() => {
+    return deleteStudentsProfessors();
+  });
+
+  test("test import CSV Students", () => {
+    let obj = {Id:"900000", Name:"Ambra", Surname:"Ferri", SSN:"MK97060783", OfficialEmail:"s900000@students.politu.it", City: "Poggio Ferro", Birthday: "1991-11-04"};
+    let arr = [];
+    arr.push(obj);
+    return dao
+      .importCSVData(arr, "Students")
+      .then((data) => {
+        expect(data).not.toEqual(undefined);
+      });
+  });
+
+});
+
+describe("check importCSVData Professors", () => {
+  beforeAll(() => {
+    return deleteStudentsProfessors();
+  });
+
+  test("test import CSV Professors", () => {
+    let obj = {Number:"d9000", Name:"Ines", Surname:"Beneventi", SSN:"XT6141393", OfficialEmail:"Ines.Beneventi@politu.it"};
+    let arr = [];
+    arr.push(obj);
+    return dao
+      .importCSVData(arr, "Professors")
+      .then((data) => {
+        expect(data).not.toEqual(undefined);
+      });
+  });
+
+});
+
+describe("check importCSVData Courses", () => {
+  beforeAll(() => {
+    return deleteCourses();
+  });
+
+  test("test import CSV Courses", () => {
+    let obj = {Code:"XY1211", Course:"Metodi di finanziamento delle imprese", Year:"1", Semester:"1", Teacher:"d9000"};
+    let obj2 = {Code:"XY8612", Course:"Informatica", Year:"1", Semester:"2", Teacher:"d9002"};
+    let arr = [];
+    arr.push(obj);
+    arr.push(obj2);
+    return dao
+      .importCSVData(arr, "Courses")
+      .then((data) => {
+        expect(data).not.toEqual(undefined);
+      });
+  });
+
+});
+
+describe("check importCSVData Enrollments", () => {
+  beforeAll(() => {
+    return deleteEnrollments();
+  });
+
+  test("test import CSV Enrollments", () => {
+    let obj = {Code:"XY1211", Student:"900000"};
+    let arr = [];
+    arr.push(obj);
+    return dao
+      .importCSVData(arr, "Enrollment")
+      .then((data) => {
+        expect(data).not.toEqual(undefined);
+      });
+  });
+
+});
+
+describe("check importCSVData Schedules", () => {
+  beforeAll(() => {
+    return deleteSchedules();
+  });
+
+  test("test import CSV Schedules", () => {
+    let obj = {Code:"XY1211", Room:1, Day: "Mon", Seats: 120, Time: "08:30-11:30"};
+    let obj2 = {Code:"XY1211", Room:1, Day: "Tue", Seats: 120, Time: "8:30-9:30"};
+    let obj3 = {Code:"XY1211", Room:1, Day: "Wed", Seats: 120, Time: "08:5:11:30"};
+    let obj4 = {Code:"XY1211", Room:1, Day: "Mon", Seats: 120, Time: "8:5:11:30"};
+    let obj5 = {Code:"XY1211", Room:1, Day: "Thu", Seats: 120, Time: "15:5-17:30"};
+    let obj6 = {Code:"XY1211", Room:1, Day: "Fri", Seats: 120, Time: "08:8-11:30"};
+    let arr = [];
+    arr.push(obj);
+    arr.push(obj2);
+    arr.push(obj3);
+    arr.push(obj4);
+    arr.push(obj5);
+    arr.push(obj6);
+    return dao
+      .importCSVData(arr, "Schedule")
+      .then((data) => {
+        expect(data).not.toEqual(undefined);
+      });
+  });
+
+});
 
 
 initLectures = () => {
@@ -589,6 +690,74 @@ clearBooking = () => {
   return new Promise((resolve, reject) => {
     const sql = `DELETE FROM Booking
    WHERE BookingId >= 100 or StudentId in (2,4)
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+deleteStudentsProfessors = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM User
+   WHERE UserId = 'd9000' or UserId = '900000'
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+deleteCourses = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM Course
+   WHERE CourseId = 'XY1211' or CourseId = 'XY8612'
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+deleteEnrollments = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM StudentCourse
+   WHERE CourseId = 'XY1211' or StudentId = '900000'
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+deleteSchedules = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM Lecture
+   WHERE CourseId = 'XY1211'
     `;
 
     db.run(sql, (err, rows) => {
