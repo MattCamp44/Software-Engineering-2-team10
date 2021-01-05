@@ -291,7 +291,6 @@ app.get(BASEURI + '/teacher/:userId/notification', (req, res) => {
 });
 
 app.put(BASEURI + '/teacher/:userId/updatenotification', (req, res) => {
-    debugger;
     dao.updateNotification(req.params.userId)
         .then(() => { res.status(200).end(); })
         .catch(() => res.status(500).json({ 'error': 'error while updating notification' }));
@@ -463,13 +462,11 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
         }
     })
     var upload = multer({ storage: storage }).any();
-    debugger;
     upload(req, res, function (err) {
         if (err) {
             console.log(err);
             return res.end("Error uploading file.");
         } else {
-            debugger;
             req.files.forEach(function (f) {
                 fs.rename(f.path,
                     "upload/" + req.body.importType + ".csv", function (err) {

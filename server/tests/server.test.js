@@ -554,12 +554,48 @@ clearCourses = () => {
   });
 };
 
-describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
-  const courses = `${__dirname}/testFiles/Courses.csv`;
-  const enrollment = `${__dirname}/testFiles/Enrollment.csv`;
-  const professors = `${__dirname}/testFiles/Professors.csv`;
-  const schedule = `${__dirname}/testFiles/Schedule.csv`;
+describe('POST /api/uploadDataCSV - Students', () => {
+  beforeAll(() => {
+    return deleteStudents();
+  });
+
   const students = `${__dirname}/testFiles/Students.csv`;
+
+  it("uploadDataCSV Students", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', students)
+      .field('importType', 'Students')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('POST /api/uploadDataCSV - Professors', () => {
+  beforeAll(() => {
+    return deleteProfessors();
+  });
+
+  const professors = `${__dirname}/testFiles/Professors.csv`;
+
+  it("uploadDataCSV Professors", async () => {
+    const response = await request
+      .post("/api/uploadDataCSV")
+      .attach('file', professors)
+      .field('importType', 'Professors')
+      .set("Accept", "application/json")
+      .set("Cookie", session);
+    expect(response.status).toBe(200);
+  });
+});
+
+describe('POST /api/uploadDataCSV - Courses', () => {
+  beforeAll(() => {
+    return deleteCourses();
+  });
+
+  const courses = `${__dirname}/testFiles/Courses.csv`;
 
   it("uploadDataCSV Courses", async () => {
     const response = await request
@@ -570,24 +606,15 @@ describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
       .set("Cookie", session);
     expect(response.status).toBe(200);
   });
-  it("uploadDataCSV Enrollment", async () => {
-    const response = await request
-      .post("/api/uploadDataCSV")
-      .attach('file', enrollment)
-      .field('importType', 'Enrollment')
-      .set("Accept", "application/json")
-      .set("Cookie", session);
-    expect(response.status).toBe(200);
+});
+
+describe('POST /api/uploadDataCSV - Lectures', () => {
+  beforeAll(() => {
+    return deleteLectures();
   });
-  it("uploadDataCSV Professors", async () => {
-    const response = await request
-      .post("/api/uploadDataCSV")
-      .attach('file', professors)
-      .field('importType', 'Professors')
-      .set("Accept", "application/json")
-      .set("Cookie", session);
-    expect(response.status).toBe(200);
-  });
+
+  const schedule = `${__dirname}/testFiles/Schedule.csv`;
+
   it("uploadDataCSV Schedule", async () => {
     const response = await request
       .post("/api/uploadDataCSV")
@@ -597,13 +624,103 @@ describe('POST /api/uploadDataCSV - upload csv data as an Officer', () => {
       .set("Cookie", session);
     expect(response.status).toBe(200);
   });
-  it("uploadDataCSV Students", async () => {
+});
+
+describe('POST /api/uploadDataCSV - Enrollments', () => {
+  beforeAll(() => {
+    return deleteEnrollments();
+  });
+
+  const enrollment = `${__dirname}/testFiles/Enrollment.csv`;
+
+  it("uploadDataCSV Enrollment", async () => {
     const response = await request
       .post("/api/uploadDataCSV")
-      .attach('file', students)
-      .field('importType', 'Students')
+      .attach('file', enrollment)
+      .field('importType', 'Enrollment')
       .set("Accept", "application/json")
       .set("Cookie", session);
     expect(response.status).toBe(200);
   });
-})
+});
+
+deleteStudents = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    DELETE FROM User WHERE UserId > 23 and RolId=1;
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+deleteProfessors = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    DELETE FROM User WHERE UserId > 23 and RolId=2;
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+deleteCourses = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    DELETE FROM Course where CourseId <> 'XY0422';
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+deleteEnrollments = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    DELETE FROM StudentCourse where CourseId <> 'XY0422';
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+deleteLectures = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    DELETE FROM Lecture where CourseId <> 'XY0422';
+    `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
