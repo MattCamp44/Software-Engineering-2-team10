@@ -1368,3 +1368,24 @@ exports.addLecture = function (data) {
     });
   });
 };
+
+//support addUser functions 
+exports.addUserWithTest = function (data) {
+   // if (process.env.npm_config_test !== "true") {
+    //   reject("ClearProductionDB");
+    // }
+  return new Promise((resolve, reject) => {
+    let sql = `insert into User (UserId,Name,LastName,Password,Email,RolID, TestResult, Number, City, Number, City, SSN, Birthday) values (?, ?, ?, "'$2a$10$ZybXIO4gXxk9FvRdk9XsvuCg9Z5Od17BjcfyaA0nhgUmm.qxqo7Mu'", ?, ?, ?, ?, ?, ?, ?, ?, ?)                  
+      `;
+    db.run(sql, [...data], (err) => {
+       
+      if (err) {
+        console.log("addUserWithTest")
+         console.log(err);
+         reject(err);
+        } else {
+        resolve(null);
+      }
+    });
+  });
+};

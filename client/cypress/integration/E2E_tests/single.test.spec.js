@@ -116,8 +116,24 @@ function addLecture(lectureData) {
       console.log(response);
     }
   )
+}
+
+function addUserForTest(userData) {
+  cy.request({
+    method: 'POST',
+    url: "http://localhost:3000/" + APIURL + '/addUserTest/',
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ data: userData }),
 
 
+  }).then(
+    (response) => {
+      expect(response.status).to.eq(200);
+      console.log(response);
+    }
+  )
 }
 
 
@@ -198,63 +214,24 @@ function getTodayPlusMinutesString(n) {
 }
 
 
-describe('[LSBT1-12]As a support officer I want to upload the list of students, courses, teachers, lectures, and classes to setup the system', () => {
-
-  // it("Support officer uploads list of schedule", () => {
-  //   clearDatabase()
-  //   const filePath = 'Schedule.csv'
-  //   supportOfficerLogin()
-  //   cy.get('#file-upload').attachFile(filePath)
-  //   cy.get('Button').contains('Upload').click()
-  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
-  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
-  // })
-
-  // it("Support officer uploads list of Courses", () => {
-  //   //clearDatabase()
-  //   const filePath = 'Courses.csv'
-  //   //supportOfficerLogin()
-  //   cy.get('select').select('Courses')
-  //   cy.get('#file-upload').attachFile(filePath)
-  //   cy.get('Button').contains('Upload').click()
-  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
-  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
-  // })
-
-  // it("Support officer uploads list of Enrollment", () => {
-  //   //clearDatabase()
-  //   const filePath = 'Enrollment.csv'
-  //   //supportOfficerLogin()
-  //   cy.get('select').select('Enrollment')
-  //   cy.get('#file-upload').attachFile(filePath)
-  //   cy.get('Button').contains('Upload').click()
-  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
-  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
-  // })
-
-  it("Support officer uploads list of Professors", () => {
+describe('[LSBT1-16]As a booking manager I want to generate a contact tracing report starting with a positive student so that we comply with safety regulations', () => {
+  it('Student cancels lecture booking -> student in waiting list gets the spot', () => {
     clearDatabase()
-    const filePath = 'Professors.csv'
-    //supportOfficerLogin()
-    supportOfficerLogin()
-    cy.get('select').select('Professors')
-    cy.get('#file-upload').attachFile(filePath)
-    cy.get('Button').contains('Upload').click()
-    cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
-    cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
+    bookingManagerLogin()
+    cy.get('[href="/tracingreport"]').click();
+    cy.get('table').find('tr').should('have.length', 2)
+    cy.get('button').contains('Generate Report').click()
+    cy.get('.modal-body> p').should('have.text', 'The requested report has been generated');
+    cy.get('a.btn.btn-primary').contains('Download CSV')//.click()
+    cy.get('button.ml-1.btn.btn-primary').contains('Download PDF')//.click()
+    cy.get('button.close').click()
+    cy.get('input#sUserID.form-control').click().type('0').type('{enter}');
+    cy.get('button').contains('Search').click()
+    cy.get('table').find('tr').should('have.length', 1)
+    cy.get('input#sUserID.form-control').clear()
+    cy.get('button').contains('Search').click()
+    cy.get('table').find('tr').should('have.length', 2)
+
   })
-
-  it("Support officer uploads list of Students", () => {
-    //clearDatabase()
-    const filePath = 'Students.csv'
-    //supportOfficerLogin()
-    cy.get('select').select('Students')
-    cy.get('#file-upload').attachFile(filePath)
-    cy.get('Button').contains('Upload').click()
-    cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
-    cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
-  })
-
-
 })
 
