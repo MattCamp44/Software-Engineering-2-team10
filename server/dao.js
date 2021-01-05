@@ -1362,6 +1362,7 @@ exports.addLecture = function (data) {
     db.run(sql, [...data], (err) => {
        
       if (err) {
+        console.log(err);
         reject(err);
       } else resolve(null);
     });

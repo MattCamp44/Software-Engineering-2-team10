@@ -332,7 +332,47 @@ describe("Server E2E test functions" , () => {
     
   })
 
+  it("addbooking", async () => {
+
+    clearBooking();
+
+    const bookingData = [1000,3,1,null,null,null,null,null,"2020-12-14 10:00"];
     
+    const response = await request.post("/api/addbooking/")
+    .send({data : bookingData})
+    .expect(200);
+    
+    expect(response.status).toBe(200);
+  })
+
+  it("addstudentcourse", async () => {
+
+    clearCourses();
+
+    const studentcourseData = [20000,"AAAAAA",10000000];
+    
+    const response = await request.post("/api/addstudentcourse/")
+    .send({data : studentcourseData})
+    .expect(200);
+    
+    expect(response.status).toBe(200);
+  })
+
+  
+  // Need to change E2E test database, now its different
+  // it("addlecture", async () => {
+
+  //   clearLecturesE2EFunctions();
+  //   const lectureData = ['BBBBBB',"2077-10-19 08:30","2077-10-18 08:30","2077-10-19",1,1500,0,902801,0,"2077-10-19 11:30",null,1,120,"Mon","8:30-11:30"];
+    
+  //   const response = await request.post("/api/addlecture/")
+  //   .send({data : lectureData})
+  //   .expect(200);
+    
+  //   expect(response.status).toBe(200);
+  //   clearLecturesE2EFunctions();
+  // })
+
 })
 
 
@@ -362,6 +402,8 @@ clearAddCourse = () => {
       }
     });
   });
+
+  
 
 
 }
@@ -415,6 +457,22 @@ clearLectures = () => {
   });
 };
 
+clearLecturesE2EFunctions = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM Lecture
+     WHERE CourseId = 'BBBBBB'
+      `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
 initBooking = () => {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO Booking
@@ -482,7 +540,7 @@ initCourses = () => {
 clearCourses = () => {
   return new Promise((resolve, reject) => {
     const sql = `DELETE FROM StudentCourse
-   WHERE StudentCourseId in (100,101,102)
+   WHERE StudentCourseId in (100,101,102,20000)
     `;
 
     db.run(sql, (err, rows) => {
