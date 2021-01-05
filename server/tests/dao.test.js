@@ -27,6 +27,9 @@ describe("check Notifications", () => {
   beforeAll(() => {
     clearLectures();
     initCourses();
+    updateTeacher();
+    initCourseForTeacher();
+    initLectureForTeacher();
     return initLectures();
   });
   afterAll(() => {
@@ -42,6 +45,7 @@ describe("check Notifications", () => {
   });
 
   test("test update Lecture Notification Added field", () => {
+    
     return dao.updateLecture(2).then((data) => {
       expect(data).toEqual(2);
     });
@@ -55,13 +59,13 @@ describe("check Notifications", () => {
 
   test("test getAvailableLectures", () => {
     
-    return dao.getAvailableLectures("XY0422", 1).then((data) => {
+    return dao.getAvailableLectures("XY1113", 1).then((data) => {
       expect(data.length > 0);
     });
   });
 
   test("test getAvailableLectures undef", () => {
-    return dao.getAvailableLectures(4, 100).then((data) => {
+    return dao.getAvailableLectures(1, 'XY1113').then((data) => {
       expect(data).toEqual(undefined);
     });
   });
@@ -84,7 +88,7 @@ describe("check Courses", () => {
 
   test("test getStudentCurrentCourses", () => {
     return dao.getStudentCurrentCourses(1).then((data) => {
-      expect(data).toHaveLength(1);
+      expect(data).toHaveLength(2);
     });
   });
 
@@ -120,7 +124,7 @@ describe("check BookingAndHistory", () => {
   });
 
   test("test bookLecture false", () => {
-    return dao.bookLecture(2, 5, "2020-12-30 15:20").then((data) => {
+    return dao.bookLecture(1000, 1, "2020-12-30 15:20").then((data) => {
       expect(data).not.toEqual(undefined);
     });
   });
@@ -158,9 +162,8 @@ describe("check BookingAndHistory", () => {
   
 
   test("test manageQueueReservation", () => {
-    // debugger
-    return dao.manageQueueReservation(2).then((data) => {
-      expect(data.length > 0);
+    return dao.manageQueueReservation(1000).then((data) => {
+      expect(null);
     });
   });
 });
@@ -180,19 +183,19 @@ describe("check BookingAndHistory", () => {
 
   test("test bookLecture", () => {
     
-    return dao.bookLecture(1, 4, "2020-12-30 15:20").then((data) => {
+    return dao.bookLecture(1000, 1, "2020-12-30 15:20").then((data) => {
       expect(data).not.toEqual(undefined);
     });
   });
 
   test("test bookingHistory", () => {
     
-    return dao.getBookingHistory(4).then((data) => {
+    return dao.getBookingHistory(1).then((data) => {
       expect(data.length > 0);
     });
   });
   test("test getBookingDetails", () => {
-    return dao.getBookingDetails(1, 4).then((data) => {
+    return dao.getBookingDetails(1000, 1).then((data) => {
       expect(data.length > 0);
     });
   });
@@ -214,7 +217,7 @@ describe("check Teacher Dashboard", () => {
     });
   });
   test("test getCourseLectures", () => {
-    return dao.getCourseLectures(2).then((data) => {
+    return dao.getCourseLectures('XY1113', 2, 0, "2021-01-01", "2020-12-30").then((data) => {
       expect(data.length > 0);
     });
   });
@@ -225,7 +228,7 @@ describe("check Teacher Dashboard", () => {
   });
 
   test("test getStudentlistOfLecture", () => {
-    return dao.getStudentlistOfLecture(1).then((data) => {
+    return dao.getStudentlistOfLecture(1000).then((data) => {
       expect(data.length > 0);
     });
   });
@@ -269,7 +272,7 @@ describe("check Teacher Stats", () => {
 
   test("test getTeacherStats1", () => {
     return dao
-      .getTeacherStats("Monthly", 8, "2020-12-01", "2020-12-18", "null")
+      .getTeacherStats("Monthly", 8, "2020-01-01", "2022-12-30", "null")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -277,7 +280,7 @@ describe("check Teacher Stats", () => {
 
   test("test getTeacherStats2", () => {
     return dao
-      .getTeacherStats("Weekly", 8, "2020-12-01", "2020-12-18", "All")
+      .getTeacherStats("Weekly", 8, "2020-01-01", "2022-12-30", "All")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -285,7 +288,7 @@ describe("check Teacher Stats", () => {
 
   test("test getTeacherStats5", () => {
     return dao
-      .getTeacherStats("Weekly", 8, "2020-12-01", "2020-12-18", 4)
+      .getTeacherStats("Weekly", 8, "2020-01-01", "2022-12-30", 4)
       .then((data) => {
         expect(data.length > 0);
       });
@@ -293,7 +296,7 @@ describe("check Teacher Stats", () => {
 
   test("test getTeacherStats3", () => {
     return dao
-      .getTeacherStats("Daily", 8, "2020-12-01", "2020-12-18", "All")
+      .getTeacherStats("Daily", 8, "2020-01-01", "2022-12-30", "All")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -301,7 +304,7 @@ describe("check Teacher Stats", () => {
 
   test("test getTeacherStats4", () => {
     return dao
-      .getTeacherStats("Daily", 8, "2020-12-01", "2020-12-18", 4)
+      .getTeacherStats("Daily", 8, "2020-01-01", "2022-12-30", 4)
       .then((data) => {
         expect(data.length > 0);
       });
@@ -309,7 +312,7 @@ describe("check Teacher Stats", () => {
 
   test("test getBookingStatistics", () => {
     return dao
-      .getBookingStatistics("Weekly", "2020-12-01", "2020-12-18")
+      .getBookingStatistics("Weekly", "2020-01-01", "2022-12-30")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -317,7 +320,7 @@ describe("check Teacher Stats", () => {
 
   test("test getCancellationStatistics", () => {
     return dao
-      .getCancellationStatistics("Daily", "2020-12-01", "2020-12-18")
+      .getCancellationStatistics("Daily", "2020-01-01", "2020-12-30")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -325,14 +328,14 @@ describe("check Teacher Stats", () => {
 
   test("test getAttendanceStatistics", () => {
     return dao
-      .getAttendanceStatistics("Daily", "2020-12-01", "2020-12-18")
+      .getAttendanceStatistics("Daily", "2020-01-01", "2022-12-30")
       .then((data) => {
         expect(data.length > 0);
       });
   });
   test("test getAttendanceStatistics W", () => {
     return dao
-      .getAttendanceStatistics("Weekly", "2020-12-01", "2020-12-18")
+      .getAttendanceStatistics("Weekly", "2020-01-01", "2022-12-30")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -340,7 +343,7 @@ describe("check Teacher Stats", () => {
 
   test("test getAttendanceStatistics D", () => {
     return dao
-      .getAttendanceStatistics("Daily", "2020-12-01", "2020-12-18")
+      .getAttendanceStatistics("Daily", "2020-01-01", "2022-12-30")
       .then((data) => {
         expect(data.length > 0);
       });
@@ -349,7 +352,7 @@ describe("check Teacher Stats", () => {
   test("test getPresenceHistory", () => {
     debugger;
     return dao
-      .getPresenceHistory("XY1112", "2020-12-01", "2020-12-18","902811")
+      .getPresenceHistory("XY1211", "2020-01-01", "2022-12-30", 2)
       .then((data) => {
         expect(data.length > 0);
       });
@@ -477,8 +480,8 @@ describe("check importCSVData Courses", () => {
   });
 
   test("test import CSV Courses", () => {
-    let obj = {Code:"XY1211", Course:"Metodi di finanziamento delle imprese", Year:"1", Semester:"1", Teacher:"d9000"};
-    let obj2 = {Code:"XY8612", Course:"Informatica", Year:"1", Semester:"2", Teacher:"d9002"};
+    let obj = {Code:"XY1211", Course:"Metodi di finanziamento delle imprese", Year:"1", Semester:"1", Teacher:"t2"};
+    let obj2 = {Code:"XY86123", Course:"Informatica", Year:"1", Semester:"2", Teacher:"d9002"};
     let arr = [];
     arr.push(obj);
     arr.push(obj2);
@@ -497,7 +500,7 @@ describe("check importCSVData Enrollments", () => {
   });
 
   test("test import CSV Enrollments", () => {
-    let obj = {Code:"XY1211", Student:"900000"};
+    let obj = {Code:"XY12112", Student:"900000"};
     let arr = [];
     arr.push(obj);
     return dao
@@ -515,6 +518,7 @@ describe("check importCSVData Schedules", () => {
   });
 
   test("test import CSV Schedules", () => {
+    debugger;
     let obj = {Code:"XY1211", Room:1, Day: "Mon", Seats: 120, Time: "08:30-11:30"};
     let obj2 = {Code:"XY1211", Room:1, Day: "Tue", Seats: 120, Time: "8:30-9:30"};
     let obj3 = {Code:"XY1211", Room:1, Day: "Wed", Seats: 120, Time: "08:5:11:30"};
@@ -612,7 +616,8 @@ initCourses = () => {
    StudentId)
    VALUES (100, 'XY0422', 1),
    (101, 'XY0422', 4),
-   (102, 'XY0422', 5);
+   (102, 'XY0422', 5),
+   (103, 'XY1113', 1);
    `;
 
     db.run(sql, (err, rows) => {
@@ -626,10 +631,64 @@ initCourses = () => {
   });
 };
 
+updateTeacher = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+   update user set Number='t2' where  UserId=2;
+   `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+initCourseForTeacher = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    insert into Course (CourseId,Name,Description,Year,Semester,Teacher) 
+   values('XY1113','Bigdata','Bigdata',2,1,'t2');
+   `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+initLectureForTeacher = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    insert into Lecture(Courseid,Schedule,BookingDeadline,NotificationDeadline,Bookable,LectureId,Canceled,
+      TeacherId,NotificationAdded,EndTime,CancelDate, room,Seats,day,time)
+      values('XY1113','2021-01-25 08:00',Date('now'),Date('now'),1,1000,0,
+      2,0,'2021-01-25 10:00',null, 1,120,'Mon', '08:00-10:00');
+   `;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      } else {
+        resolve();
+      }
+    });
+  });
+};
 clearCourses = () => {
   return new Promise((resolve, reject) => {
     const sql = `DELETE FROM StudentCourse
-   WHERE StudentCourseId in (100,101,102)
+   WHERE StudentCourseId in (100,101,102,103);
+   delete from Course where CourseId = 'XY1113';
+   delete from Lecture where LectureId = 1000;
     `;
 
     db.run(sql, (err, rows) => {
@@ -723,7 +782,7 @@ deleteStudentsProfessors = () => {
 deleteCourses = () => {
   return new Promise((resolve, reject) => {
     const sql = `DELETE FROM Course
-   WHERE CourseId = 'XY1211' or CourseId = 'XY8612'
+   WHERE CourseId in ('XY12113', 'XY86123', 'XY1211')
     `;
 
     db.run(sql, (err, rows) => {
@@ -739,8 +798,8 @@ deleteCourses = () => {
 
 deleteEnrollments = () => {
   return new Promise((resolve, reject) => {
-    const sql = `DELETE FROM StudentCourse
-   WHERE CourseId = 'XY1211' or StudentId = '900000'
+    const sql = `
+   DELETE FROM StudentCourse where CourseId = 'XY1211';
     `;
 
     db.run(sql, (err, rows) => {
@@ -756,8 +815,7 @@ deleteEnrollments = () => {
 
 deleteSchedules = () => {
   return new Promise((resolve, reject) => {
-    const sql = `DELETE FROM Lecture
-   WHERE CourseId = 'XY1211'
+    const sql = `DELETE FROM Lecture where CourseId = 'XY1211'
     `;
 
     db.run(sql, (err, rows) => {

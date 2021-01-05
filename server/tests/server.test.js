@@ -679,7 +679,7 @@ deleteProfessors = () => {
 deleteCourses = () => {
   return new Promise((resolve, reject) => {
     const sql = `
-    DELETE FROM Course where CourseId <> 'XY0422';
+    DELETE FROM Course where CourseId not in ('XY0422', 'XY1211');
     `;
 
     db.run(sql, (err, rows) => {
@@ -695,7 +695,7 @@ deleteCourses = () => {
 deleteEnrollments = () => {
   return new Promise((resolve, reject) => {
     const sql = `
-    DELETE FROM StudentCourse where CourseId <> 'XY0422';
+    DELETE FROM StudentCourse where CourseId not in ('XY0422');
     `;
 
     db.run(sql, (err, rows) => {
@@ -711,7 +711,7 @@ deleteEnrollments = () => {
 deleteLectures = () => {
   return new Promise((resolve, reject) => {
     const sql = `
-    DELETE FROM Lecture where CourseId <> 'XY0422';
+    DELETE FROM Lecture where CourseId not in ('XY0422') and LectureId <> 472 ;
     `;
 
     db.run(sql, (err, rows) => {
