@@ -198,47 +198,63 @@ function getTodayPlusMinutesString(n) {
 }
 
 
+describe('[LSBT1-12]As a support officer I want to upload the list of students, courses, teachers, lectures, and classes to setup the system', () => {
 
-describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better', () => {
-})
-describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better', () => {
+  // it("Support officer uploads list of schedule", () => {
+  //   clearDatabase()
+  //   const filePath = 'Schedule.csv'
+  //   supportOfficerLogin()
+  //   cy.get('#file-upload').attachFile(filePath)
+  //   cy.get('Button').contains('Upload').click()
+  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
+  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
+  // })
 
-  it('Booking Check', () => {
-    clearDatabase();
-    const courseData = [1, "data science", "We study a lot of data science", "2020", 1, "John Smith"];
-    addCourse(courseData);
-    const studentcourseData = [1, 1, 1];
-    addStudentCourse(studentcourseData);
-    const todaystring = getTodayString();
-    const tomorrowstring = getTomorrowString();
-    const deadlinestring = getTodayPlusNString(5);
-    const lectureData = [1, todaystring, deadlinestring, deadlinestring, todaystring, 1, 0, 2, 0, 1, 120, "Mon", "8:30-11:30"];
-    addLecture(lectureData);
-    cy.visit("http://localhost:3000/");
-    studentLogin(1);
-    cy.contains(courseData[2]).click();
-    cy.contains(courseData[5]); //click();
-    cy.get('Button').contains('Book').click();
-    cy.get('Button').contains('Yes').click();
-    cy.get('Button').contains('Ok').click();
-    logout()
-    const courseData2 = [1,"data science","We study a lot of data science","2020",1,"Joe Simone"];
-    const studentcourseData2 = [2,1,3];
-    addStudentCourse(studentcourseData2);
-    studentLogin(2);
-    cy.contains(courseData2[2]).click();
-    cy.contains(courseData2[5]); //click();
-    cy.get('Button').contains('Book').click();
-    cy.get('Button').contains('Yes').click();
-    cy.get('Button').contains('Ok').click();
-    logout()
-    professorLogin()
-    cy.get('[href="/allbookings"]').click();
-    cy.get('select').select('Daily')
-    cy.get('Button').contains('data science').click();
-    cy.get('g').invoke('val').should('eq',2) 
-   
+  // it("Support officer uploads list of Courses", () => {
+  //   //clearDatabase()
+  //   const filePath = 'Courses.csv'
+  //   //supportOfficerLogin()
+  //   cy.get('select').select('Courses')
+  //   cy.get('#file-upload').attachFile(filePath)
+  //   cy.get('Button').contains('Upload').click()
+  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
+  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
+  // })
+
+  // it("Support officer uploads list of Enrollment", () => {
+  //   //clearDatabase()
+  //   const filePath = 'Enrollment.csv'
+  //   //supportOfficerLogin()
+  //   cy.get('select').select('Enrollment')
+  //   cy.get('#file-upload').attachFile(filePath)
+  //   cy.get('Button').contains('Upload').click()
+  //   cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
+  //   cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
+  // })
+
+  it("Support officer uploads list of Professors", () => {
+    clearDatabase()
+    const filePath = 'Professors.csv'
+    //supportOfficerLogin()
+    supportOfficerLogin()
+    cy.get('select').select('Professors')
+    cy.get('#file-upload').attachFile(filePath)
+    cy.get('Button').contains('Upload').click()
+    cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
+    cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
   })
+
+  it("Support officer uploads list of Students", () => {
+    //clearDatabase()
+    const filePath = 'Students.csv'
+    //supportOfficerLogin()
+    cy.get('select').select('Students')
+    cy.get('#file-upload').attachFile(filePath)
+    cy.get('Button').contains('Upload').click()
+    cy.get('.custom-ui-success > p').should('have.text', 'Successfully imported!');
+    cy.get('.custom-ui-success > button').should('have.text', 'Ok').click();
+  })
+
 
 })
 
