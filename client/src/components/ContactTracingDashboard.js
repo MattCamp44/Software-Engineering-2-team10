@@ -85,7 +85,7 @@ class ContactTracingDashboard extends React.Component {
             <Form>
                 <Row>
                     <Col xs="auto">
-                        <Form.Control placeholder="Student ID" name="userId" onChange={(e) => this.updateField(e.target.name, e.target.value)} />
+                        <Form.Control id = "sUserID" placeholder="Student ID" name="userId" onChange={(e) => this.updateField(e.target.name, e.target.value)} />
                     </Col>
                     <Col xs="auto">
                         <Form.Control placeholder="First name" name="name" onChange={(e) => this.updateField(e.target.name, e.target.value)} />

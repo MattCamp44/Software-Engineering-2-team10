@@ -61,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "cypress-file-upload": "^4.1.1",
     "jest-sonar-reporter": "^2.0.0"
   }
 }
