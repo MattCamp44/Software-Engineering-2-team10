@@ -87,6 +87,20 @@ app.post(BASEURI + '/addcourse/', (req, res) => {
         });
 });
 
+//add user for test
+app.post(BASEURI + '/addUserTest/', (req, res) => {
+    dao.addUserWithTest(req.body.data)
+        .then(() => {
+            console.log("Server resolved");
+            res.status(200).end();
+        })
+        .catch((err) => {
+            res.status(500).json({
+                errors: [{ 'param': 'Server', 'msg': err }],
+            });
+        });
+});
+
 app.post(BASEURI + '/addbooking/', (req, res) => {
     dao.addBooking(req.body.data)
         .then(() => {
