@@ -115,7 +115,7 @@ class OfficerDashboard extends React.Component {
                                 </Col>
                                 <Col className="col-md-2">
                                     <label>Select your file:</label>
-                                    <input id = "file-upload" type="file" name="file" onChange={this.onChangeHandler} />
+                                    <input type="file" name="file" onChange={this.onChangeHandler} />
                                 </Col>
                             </Row>
                             <Row>

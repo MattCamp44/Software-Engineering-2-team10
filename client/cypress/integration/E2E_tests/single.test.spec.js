@@ -9,31 +9,25 @@ const APIURL = "api";
 
 
 const studentLogin = (number) => {
-  cy.visit('http://localhost:3000/');
-  //cy.url().should('contain' , 'http://localhost:3000/login');
-  cy.contains('Username').click().type('student' + number);
-  cy.contains('Password').click().type('pass').type('{enter}');
-  cy.location('href').should('eq', 'http://localhost:3000/');
-
+    cy.visit('http://localhost:3000/');
+    //cy.url().should('contain' , 'http://localhost:3000/login');
+    cy.contains('Username').click().type('student'+number);
+    cy.contains('Password').click().type('pass').type('{enter}');
+    cy.location('href').should('eq','http://localhost:3000/');
+    
 }
 
 const professorLogin = () => {
   cy.visit('http://localhost:3000/');
-  cy.url().should('contain', 'http://localhost:3000/login');
+  cy.url().should('contain' , 'http://localhost:3000/login');
   cy.contains('Username').click().type('teacher1');
   cy.contains('Password').click().type('pass').type('{enter}');
+  
 }
 
-function bookingManagerLogin() {
 
-  cy.visit('http://localhost:3000/');
-  cy.url().should('contain', 'http://localhost:3000/login');
-  cy.contains('Username').click().type('bmanager');
-  cy.contains('Password').click().type('pass').type('{enter}');
 
-}
-
-function addCourse(courseData) {
+function addCourse(courseData){
   cy.request({
     method: 'POST',
     url: "http://localhost:3000/" + APIURL + '/addcourse/',
@@ -41,8 +35,8 @@ function addCourse(courseData) {
       "Content-type": "application/json",
     },
     body: JSON.stringify({ data: courseData }),
-
-
+      
+    
   }).then(
     (response) => {
       expect(response.status).to.eq(200);
@@ -54,7 +48,7 @@ function addCourse(courseData) {
   // })
 }
 
-function addBooking(bookingData) {
+function addBooking(bookingData){
   cy.request({
     method: 'POST',
     url: "http://localhost:3000/" + APIURL + '/addbooking/',
@@ -62,8 +56,8 @@ function addBooking(bookingData) {
       "Content-type": "application/json",
     },
     body: JSON.stringify({ data: bookingData }),
-
-
+      
+    
   }).then(
     (response) => {
       expect(response.status).to.eq(200);
@@ -78,7 +72,7 @@ function addBooking(bookingData) {
 
 
 
-function addStudentCourse(studentcourseData) {
+function addStudentCourse(studentcourseData){
   cy.request({
     method: 'POST',
     url: "http://localhost:3000/" + APIURL + '/addstudentcourse/',
@@ -86,8 +80,8 @@ function addStudentCourse(studentcourseData) {
       "Content-type": "application/json",
     },
     body: JSON.stringify({ data: studentcourseData }),
-
-
+      
+    
   }).then(
     (response) => {
       expect(response.status).to.eq(200);
@@ -100,7 +94,7 @@ function addStudentCourse(studentcourseData) {
 }
 
 
-function addLecture(lectureData) {
+function addLecture(lectureData){
   cy.request({
     method: 'POST',
     url: "http://localhost:3000/" + APIURL + '/addlecture/',
@@ -108,42 +102,26 @@ function addLecture(lectureData) {
       "Content-type": "application/json",
     },
     body: JSON.stringify({ data: lectureData }),
-
-
+      
+    
   }).then(
     (response) => {
       expect(response.status).to.eq(200);
       console.log(response);
     }
   )
-}
-
-function addUserForTest(userData) {
-  cy.request({
-    method: 'POST',
-    url: "http://localhost:3000/" + APIURL + '/addUserTest/',
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({ data: userData }),
 
 
-  }).then(
-    (response) => {
-      expect(response.status).to.eq(200);
-      console.log(response);
-    }
-  )
 }
 
 
 
 
-function clearDatabase() {
+function clearDatabase(){
   cy.request({
     method: 'DELETE',
-    url: "http://localhost:3000/" + APIURL + '/cleardatabase/',
-
+    url:"http://localhost:3000/" + APIURL + '/cleardatabase/',
+    
   }).then(
     (response) => {
       expect(response.status).to.eq(200);
@@ -153,30 +131,30 @@ function clearDatabase() {
 }
 
 
-function getTodayString() {
-
+function getTodayString(){
+  
   var today = new Date();
 
-  return today.toISOString().slice(0, 10) + " " + today.toISOString().slice(11, 16);
+  return today.toISOString().slice(0,10) + " " + today.toISOString().slice(11,16);
 
 }
 
 
-function getTomorrowString() {
+function getTomorrowString(){
 
   var today = new Date();
   var tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return tomorrow.toISOString().slice(0, 10) + " " + tomorrow.toISOString().slice(11, 16);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  return tomorrow.toISOString().slice(0,10) + " " + tomorrow.toISOString().slice(11,16);
 
 }
 
-function getTodayPlusNString(n) {
+function getTodayPlusNString(n){
 
   var today = new Date();
   var day = new Date(today);
-  day.setDate(day.getDate() + n);
-  return day.toISOString().slice(0, 10) + " " + day.toISOString().slice(11, 16);
+  day.setDate(day.getDate()+n);
+  return day.toISOString().slice(0,10) + " " + day.toISOString().slice(11,16);
 
 
 }
@@ -184,54 +162,143 @@ function getTodayPlusNString(n) {
 
 
 
-function supportOfficerLogin() {
+function supportOfficerLogin(){
 
   cy.visit('http://localhost:3000/');
-  cy.url().should('contain', 'http://localhost:3000/login');
+  cy.url().should('contain' , 'http://localhost:3000/login');
   cy.contains('Username').click().type('Officer');
   cy.contains('Password').click().type('pass').type('{enter}');
 
 
 }
 
-function logout() {
+function logout(){
   cy.get('#collasible-nav-dropdown > span').click();
   cy.get('.dropdown-item').click();
 }
 
 
-function getTodayPlusMinutesString(n) {
+function getTodayPlusMinutesString(n){
 
   var today = new Date();
   var newDateObj = moment(today).add(60 + n, 'm').toDate();
   // today.setTime(today.getTime() + n*36000);
-
-
-  return newDateObj.toISOString().slice(0, 10) + " " + newDateObj.toISOString().slice(11, 16);
+  
+  
+  return newDateObj.toISOString().slice(0,10) + " " + newDateObj.toISOString().slice(11,16);
 
 
 
 }
 
 
-describe('[LSBT1-16]As a booking manager I want to generate a contact tracing report starting with a positive student so that we comply with safety regulations', () => {
-  it('Student cancels lecture booking -> student in waiting list gets the spot', () => {
-    clearDatabase()
-    bookingManagerLogin()
-    cy.get('[href="/tracingreport"]').click();
-    cy.get('table').find('tr').should('have.length', 2)
-    cy.get('button').contains('Generate Report').click()
-    cy.get('.modal-body> p').should('have.text', 'The requested report has been generated');
-    cy.get('a.btn.btn-primary').contains('Download CSV')//.click()
-    cy.get('button.ml-1.btn.btn-primary').contains('Download PDF')//.click()
-    cy.get('button.close').click()
-    cy.get('input#sUserID.form-control').click().type('0').type('{enter}');
-    cy.get('button').contains('Search').click()
-    cy.get('table').find('tr').should('have.length', 1)
-    cy.get('input#sUserID.form-control').clear()
-    cy.get('button').contains('Search').click()
-    cy.get('table').find('tr').should('have.length', 2)
 
-  })
+
+
+describe('[LSBT1-3]As a teacher I want to access the list of students booked for my lectures so that I am informed' , () => {
+  
+  it("Professor turns a lecture into distance scheduled for later than 30 minutes" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(35);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+
+    cy.get('.dropdown-menu > :nth-child(1)').click();
+
+    cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to make lecture scheduled on ${todayplusminutesstring} online?YesNo`);
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'No');
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+
+    })
+
+
+  it("Professor cannot turn a lecture scheduled for earlier than 30 minutes" , () => {
+    clearDatabase();
+    //(CourseId,Name,Description,Year,Semester,Teacher)
+    const courseData = [1,"data science","We study a lot of data science","2020",1,"John Smith"];
+  
+    addCourse(courseData);
+    
+    //(StudentCourseId,CourseId,StudentId)
+    var studentcourseData = [1,1,1];
+  
+    addStudentCourse(studentcourseData);
+  
+    studentcourseData = [2,1,3];
+    addStudentCourse(studentcourseData);
+    
+    
+    const tomorrowstring = getTomorrowString();
+    const todaystring = getTodayString();
+    
+    
+    // const deadlinestring = deadline.toISOString().slice(0,16);
+    const deadlinestring = getTodayPlusNString(5);
+    
+    // In more than one hour
+    const todayplusminutesstring = getTodayPlusMinutesString(25);
+  
+  
+   
+    const lectureData = [1,todayplusminutesstring, todaystring, deadlinestring, todaystring , 1, 0, 2, 0, 1, 1, "Mon",  "8:30-11:30"];
+  
+    addLecture(lectureData);
+  
+    professorLogin();
+  
+    cy.get('.btn > .svg-inline--fa').click();
+
+    cy.get('#bg-nested-dropdown').click();
+    cy.get('thead > tr > :nth-child(4)').click();
+    cy.get('tbody > tr > :nth-child(4)').should('have.text', 'Yes');
+    // cy.get('[disabled]');
+
+    // cy.get('.dropdown-menu > :nth-child(1)').click();
+
+    // cy.get('.react-confirm-alert-body').should('have.text', `WarningAre you sure you want to make lecture scheduled on ${todayplusminutesstring} online?YesNo`);
+    // cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    // cy.get('tbody > tr > :nth-child(4)').should('have.text', 'Yes');
+    //cannot click here I guess??
+    // cy.get(':nth-child(3) > .form-control').select(':nth-child(3) > .form-control');
+   
+
+    })
+
+  
+
 })
 
