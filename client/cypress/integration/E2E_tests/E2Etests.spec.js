@@ -35,6 +35,14 @@ function supportOfficerLogin(){
 
 
 }
+function bookingManagerLogin() {
+
+  cy.visit('http://localhost:3000/');
+  cy.url().should('contain', 'http://localhost:3000/login');
+  cy.contains('Username').click().type('bmanager');
+  cy.contains('Password').click().type('pass').type('{enter}');
+
+}
 
 function logout(){
   cy.get('#collasible-nav-dropdown > span').click();
@@ -748,7 +756,42 @@ describe('[LSBT1-9]As a teacher I want to turn a presence lecture into a distanc
 
 })
 
-describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better' , () => {
+describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better', () => {
+  it('Chart checking', () => {
+    clearDatabase();
+    const courseData = [1, "data science", "We study a lot of data science", "2020", 1, "John Smith"];
+    addCourse(courseData);
+    const studentcourseData = [1, 1, 1];
+    addStudentCourse(studentcourseData);
+    const todaystring = getTodayString();
+    const tomorrowstring = getTomorrowString();
+    const deadlinestring = getTodayPlusNString(5);
+    const lectureData = [1, todaystring, deadlinestring, deadlinestring, todaystring, 1, 0, 2, 0, 1, 120, "Mon", "8:30-11:30"];
+    addLecture(lectureData);
+    cy.visit("http://localhost:3000/");
+    studentLogin(1);
+    cy.contains(courseData[2]).click();
+    cy.contains(courseData[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+    logout()
+    const courseData2 = [1,"data science","We study a lot of data science","2020",1,"Joe Simone"];
+    const studentcourseData2 = [2,1,3];
+    addStudentCourse(studentcourseData2);
+    studentLogin(2);
+    cy.contains(courseData2[2]).click();
+    cy.contains(courseData2[5]); //click();
+    cy.get('Button').contains('Book').click();
+    cy.get('Button').contains('Yes').click();
+    cy.get('Button').contains('Ok').click();
+    logout()
+    professorLogin()
+    cy.get('[href="/allbookings"]').click();
+    cy.get('select').select('Daily')
+    cy.get('Button').contains('data science').click(); 
+  })
+
 })
 
 describe('[LSBT1-11]As a booking manager I want to monitor usage (booking, cancellations, attendance) of the system', () => {
