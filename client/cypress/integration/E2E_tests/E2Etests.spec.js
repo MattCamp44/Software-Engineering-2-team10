@@ -185,7 +185,8 @@ function getTodayPlusNString(n) {
 function getTodayPlusMinutesString(n) {
 
   var today = new Date();
-  var newDateObj = moment(today).add(60 + n, 'm').toDate();
+
+  var newDateObj = moment(today).add(-today.getTimezoneOffset() + n, 'm').toDate();
   // today.setTime(today.getTime() + n*36000);
 
 

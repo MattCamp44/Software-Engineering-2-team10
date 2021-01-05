@@ -1375,7 +1375,7 @@ exports.addUserWithTest = function (data) {
     //   reject("ClearProductionDB");
     // }
   return new Promise((resolve, reject) => {
-    let sql = `insert into User (UserId,Name,LastName,Password,Email,RolID, TestResult, Number, City, Number, City, SSN, Birthday) values (?, ?, ?, "'$2a$10$ZybXIO4gXxk9FvRdk9XsvuCg9Z5Od17BjcfyaA0nhgUmm.qxqo7Mu'", ?, ?, ?, ?, ?, ?, ?, ?, ?)                  
+    let sql = `insert into User (UserId,Name,LastName,Password,Email,RolID, TestResult, Number, City, SSN, Birthday) values (?, ?, ?, "'$2a$10$ZybXIO4gXxk9FvRdk9XsvuCg9Z5Od17BjcfyaA0nhgUmm.qxqo7Mu'", ?, ?, ?, ?, ?, ?, ?)                  
       `;
     db.run(sql, [...data], (err) => {
        
