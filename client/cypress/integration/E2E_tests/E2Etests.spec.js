@@ -751,7 +751,78 @@ describe('[LSBT1-9]As a teacher I want to turn a presence lecture into a distanc
 describe('[LSBT1-10]As a teacher I want to access the historical data about bookings so that I can plan better' , () => {
 })
 
-describe('[LSBT1-11]As a booking manager I want to monitor usage (booking, cancellations, attendance) of the system' , () => {
+describe('[LSBT1-11]As a booking manager I want to monitor usage (booking, cancellations, attendance) of the system', () => {
+
+  it('Booking Check', () => {
+    clearDatabase()
+    const courseData = [1, "data science", "We study a lot of data science", "2020", 1, "John Smith"]
+    addCourse(courseData)
+    const studentcourseData = [1, 1, 1]
+    addStudentCourse(studentcourseData)
+    const todaystring = getTodayString()
+    const tomorrowstring = getTomorrowString()
+    const deadlinestring = getTodayPlusNString(5)
+    const lectureData = [1, todaystring, deadlinestring, deadlinestring, todaystring, 1, 0, 2, 0, 1, 120, "Mon", "8:30-11:30"]
+
+    addLecture(lectureData)
+
+    cy.visit("http://localhost:3000/")
+    studentLogin(1);
+    cy.contains(courseData[2]).click()
+    cy.contains(courseData[5])
+    cy.get('Button').contains('Book').click()
+    cy.get('Button').contains('Yes').click()
+    cy.get('Button').contains('Ok').click()
+    logout()
+    bookingManagerLogin();
+    cy.get('select')
+      .should('have.value', 'Monthly')
+    cy.get('select').select('Weekly')
+    cy.get('table').contains('th', 'Weekly').should('be.visible')
+    cy.get('table').contains('th', 'Average').should('be.visible')
+
+    cy.get('select').select('Monthly')
+    cy.get('table').contains('th', 'Monthly').should('be.visible')
+    cy.get('table').contains('th', 'Average').should('be.visible')
+
+    cy.get('select').select('Daily')
+    cy.get('table').contains('th', 'Daily').should('be.visible')
+    cy.get('table').contains('th', 'Count').should('be.visible')
+
+    cy.get('Button').contains('Booking').click()
+    cy.get('table').find('tr').find('td').contains("1")
+    cy.get('table').find('tr').should('have.length', 2)
+    cy.get('Button').contains('Cancelletion').click()
+    cy.get('table').find('tr').should('have.length', 1)
+    cy.get('Button').contains('Attendance').click()
+    cy.get('table').find('tr').find('td').contains("0")
+    cy.get('table').find('tr').should('have.length', 2)
+  })
+  it('Cancelletion Check', () => {
+    logout()
+
+    cy.visit("http://localhost:3000/");
+    studentLogin(1);
+    cy.get('[href="/BookingHistory"]').click();
+    cy.get('input').click();
+    cy.get('.react-confirm-alert-body').should('have.text', "WarningDo you want to cancel the reservation for this lecture?YesNo");
+    cy.get('.react-confirm-alert-button-group > :nth-child(1)').click();
+    cy.get('.navbar-brand').click();
+    cy.get('.card1').click();
+    cy.get('.btn').should('have.text', 'Book');
+    logout()
+    bookingManagerLogin();
+    cy.get('select').select('Daily')
+
+
+    cy.get('Button').contains('Booking').click()
+    cy.get('table').find('tr').should('have.length', 1)
+    cy.get('Button').contains('Cancelletion').click()
+    cy.get('table').find('tr').find('td').contains("1")
+    cy.get('table').find('tr').should('have.length', 2)
+    cy.get('Button').contains('Attendance').click()
+    cy.get('table').find('tr').should('have.length', 1)
+  })
 })
 
 describe('[LSBT1-12]As a support officer I want to upload the list of students, courses, teachers, lectures, and classes to setup the system' , () => {
