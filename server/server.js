@@ -453,6 +453,7 @@ app.post(BASEURI + '/updatepresence/:bookingId/:presence', (req, res) => {
 });
 
 app.post(BASEURI + '/uploadDataCSV', (req, res) => {
+    
     var storage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, 'upload')
@@ -461,7 +462,7 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
             cb(null, Date.now() + '-' + file.originalname)
         }
     })
-    var upload = multer({ storage: storage }).any();
+    var upload = multer({ storage: storage, limits: {fileSize: 10000000} }).any();
     upload(req, res, function (err) {
         if (err) {
             console.log(err);
@@ -508,7 +509,7 @@ app.put('/api/changeLectureState', (req, res) => {
 });
 
 
-makeCSVArray = (file, type) => {
+let makeCSVArray = (file, type) => {
     fs.readFile(file.path, async (err, data) => {
         if (err) {
             console.error(err)

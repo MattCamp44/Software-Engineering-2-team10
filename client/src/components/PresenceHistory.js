@@ -4,7 +4,6 @@ import { AuthContext } from "../auth/AuthContext";
 import API from "../API/API";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Table from 'react-bootstrap/Table';
 import Chart from "react-apexcharts";
 
 const moment = require("moment");
