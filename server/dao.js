@@ -1071,7 +1071,7 @@ exports.importCSVData = function (data, type) {
                       element.Room,
                       element.Seats,
                       element.Day,
-                      element.Time,
+                      startTime+"-"+endTime,
                     ],
                     (rows, err) => {
                       if (err) {
