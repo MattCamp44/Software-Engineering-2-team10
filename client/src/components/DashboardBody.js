@@ -13,12 +13,14 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faTrashAlt, faLaptop, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class DashboardBody extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { courses: [], lectures: [], students: [], selectedCourse: null, selectedLecture: null, userId: props.id, nPagesL: 0, currentPageL: 0, showCancelledL: 0, lectureStartDate: new Date().toISOString().slice(0, 10), lectureEndDate: "9999-99-99" };
+        this.state = { courses: [], lectures: [], students: [], selectedCourse: null, selectedLecture: null, userId: props.id, nPagesL: 0, currentPageL: 0, showCancelledL: 0, lectureStartDate: new Date(), lectureEndDate: null };
     }
 
     componentDidMount() {
@@ -47,14 +49,14 @@ class DashboardBody extends React.Component {
     }
 
     getCourseLectures = (course) => {
-        API.getCourseLectures(course.CourseId, this.state.showCancelledL, this.state.lectureStartDate, this.state.lectureEndDate)
+        API.getCourseLectures(course.CourseId, this.state.showCancelledL, this.state.lectureStartDate !== null ? this.state.lectureStartDate.toISOString().slice(0, 10) : this.lectureStartDate, this.state.lectureEndDate !== null ? this.state.lectureEndDate.toISOString().slice(0, 10) : "9999-99-99")
             .then((data) => {
                 data.forEach(element => {
                     const diff = new Date(element.Schedule).getTime() - new Date().getTime();
                     element.Cancelable = diff >= 3600000 ? 1 : 0;
                     element.isBookable = diff >= 3600000 / 2 ? 1 : 0;
                 });
-                this.setState({ lectures: data, selectedCourse: course, selectedLecture: null, nPagesL: Math.ceil(data.length / 10) });
+                this.setState({ lectures: data, selectedCourse: course, selectedLecture: null, nPagesL: Math.ceil(data.length / 10), currentPageL: 0 });
             })
             .catch((errorObj) => {
                 console.log(errorObj);
@@ -183,7 +185,7 @@ class DashboardBody extends React.Component {
                     <Breadcrumb.Item onClick={(e) => this.getLectureStudents(this.state.selectedLecture)}>Lecture of {this.state.selectedLecture.Schedule}</Breadcrumb.Item> : <></>}
             </Breadcrumb>
             {this.state.selectedLecture != null ? <StudentTable students={this.state.students} selectedLecture={this.state.selectedLecture} updatePresence={this.updatePresence}/>
-                : this.state.selectedCourse != null ? <LectureTable lectures={this.state.lectures} currentPageL={this.state.currentPageL} nPagesL={this.state.nPagesL} lectureStartDate={this.state.lectureStartDate} setVal={this.setVal} showCancelledL={this.state.showCancelledL} getLectureStudents={this.getLectureStudents} deleteLectureConfirm={this.deleteLectureConfirm} makeLectureOnlineConfirm={this.makeLectureOnlineConfirm} />
+                : this.state.selectedCourse != null ? <LectureTable lectures={this.state.lectures} currentPageL={this.state.currentPageL} nPagesL={this.state.nPagesL} lectureStartDate={this.state.lectureStartDate} lectureEndDate={this.state.lectureEndDate} setVal={this.setVal} showCancelledL={this.state.showCancelledL} getLectureStudents={this.getLectureStudents} deleteLectureConfirm={this.deleteLectureConfirm} makeLectureOnlineConfirm={this.makeLectureOnlineConfirm} />
                     : <CourseTable courses={this.state.courses} getCourseLectures={this.getCourseLectures} />
             }
         </>
@@ -220,18 +222,11 @@ function LectureTable(props) {
                 <Form.Row>
                     <Form.Group as={Col}>
                         <Form.Label>Schedule start date</Form.Label>
-                        <Form.Control
-                            type="date"
-                            placeholder="Enter date"
-                            defaultValue={props.lectureStartDate}
-                            onChange={(e) => props.setVal('lectureStartDate', e.target.value)} />
+                        <DatePicker className="form-control" selected={props.lectureStartDate} onChange={date => props.setVal('lectureStartDate', date)} />
                     </Form.Group>
                     <Form.Group as={Col}>
                         <Form.Label>Schedule end date</Form.Label>
-                        <Form.Control
-                            type="date"
-                            placeholder="Enter date"
-                            onChange={(e) => props.setVal('lectureEndDate', e.target.value)} />
+                        <DatePicker className="form-control" selected={props.lectureEndDate} onChange={date => props.setVal('lectureEndDate', date)} />
                     </Form.Group>
                     <Form.Group as={Col}>
                         <Form.Label>Canceled</Form.Label>
