@@ -18,6 +18,8 @@ const jwtSecret = "9SMivhSVEMs8KMz3nSvEsbnTBT4YkKaY4pnS957cDG7BID6Z7ZpxUC0jgnEqR
 var multer = require('multer')
 var cors = require('cors');
 
+var Iconv  = require('iconv').Iconv;
+
 //dao.setDb("db/PULSeBS_test.db");
 //dao.setDb("db/PULSeBS_test_empty.db");
 
@@ -453,7 +455,7 @@ app.post(BASEURI + '/updatepresence/:bookingId/:presence', (req, res) => {
 });
 
 app.post(BASEURI + '/uploadDataCSV', (req, res) => {
-    
+
     var storage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, 'upload')
@@ -462,7 +464,7 @@ app.post(BASEURI + '/uploadDataCSV', (req, res) => {
             cb(null, Date.now() + '-' + file.originalname)
         }
     })
-    var upload = multer({ storage: storage, limits: {fileSize: 10000000} }).any();
+    var upload = multer({ storage: storage, limits: { fileSize: 10000000 } }).any();
     upload(req, res, function (err) {
         if (err) {
             console.log(err);
@@ -497,17 +499,16 @@ app.get(BASEURI + '/getOfficerLectures/', (req, res) => {
 });
 
 app.put('/api/changeLectureState', (req, res) => {
-    dao.changeLectureState(req.query.type ,req.query.year, req.query.sem)
-    .then(() => {
-        res.status(200).end();
-    })
-    .catch((err) => {
-        res.status(500).json({
-            errors: [{ 'param': 'Server', 'msg': err }],
+    dao.changeLectureState(req.query.type, req.query.year, req.query.sem)
+        .then(() => {
+            res.status(200).end();
+        })
+        .catch((err) => {
+            res.status(500).json({
+                errors: [{ 'param': 'Server', 'msg': err }],
+            });
         });
-    });
 });
-
 
 let makeCSVArray = (file, type) => {
     fs.readFile(file.path, async (err, data) => {
@@ -515,7 +516,9 @@ let makeCSVArray = (file, type) => {
             console.error(err)
             return
         }
-        let csvData = await neatCsv(data);
+        var iconv = new Iconv('windows-1252', 'utf-8');
+        var newData = iconv.convert(data);
+        let csvData = await neatCsv(newData);
         dao.importCSVData(csvData, type);
     })
 }
@@ -524,7 +527,7 @@ app.get('/api/getPresenceHistory/:courseId/:startDate/:endDate', (req, res) => {
     dao.getPresenceHistory(req.params.courseId, req.params.startDate, req.params.endDate, req.user.username)
         .then((row) => {
             if (!row) {
-                res.json([{"bookCount": '0', "presenceCount": '0', 'absenceCount': '0'}])
+                res.json([{ "bookCount": '0', "presenceCount": '0', 'absenceCount': '0' }])
             } else {
                 res.json(row);
             }
