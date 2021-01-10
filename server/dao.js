@@ -1255,15 +1255,15 @@ exports.changeLectureState = function (type, year, sem) {
   //X
   return new Promise((resolve, reject) => {
     
-    const sql = `select BookCounts, PresenceCount,AbsenceCount
+    const sql = `select distinct BookCounts, PresenceCount,AbsenceCount
     from StudentAttendance
-    where Schedule BETWEEN '${startDate}' and '${endDate}'
-    and CourseId='${courseId}' and TeacherId='${userId}'   
+    where Schedule BETWEEN ? and ?
+    and CourseId=? and TeacherId=? 
         `;
 
     db.all(
       sql,
-      [],
+      [startDate, endDate, courseId, userId],
       (err, rows) => {
         if (err) {
           reject(err);
