@@ -515,12 +515,8 @@ let makeCSVArray = (file, type) => {
             console.error(err)
             return
         }
-        // var iconv = new Iconv('win1252', 'utf-8');
-        // var newData = iconv.convert(data);
-
         let str = iconv.decode(data, 'win1252');
         let buf = iconv.encode(str, 'utf8');
-
 
         let csvData = await neatCsv(buf);
         dao.importCSVData(csvData, type);
