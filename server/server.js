@@ -18,8 +18,6 @@ const jwtSecret = "9SMivhSVEMs8KMz3nSvEsbnTBT4YkKaY4pnS957cDG7BID6Z7ZpxUC0jgnEqR
 var multer = require('multer')
 var cors = require('cors');
 
-var Iconv  = require('iconv').Iconv;
-
 //dao.setDb("db/PULSeBS_test.db");
 //dao.setDb("db/PULSeBS_test_empty.db");
 
@@ -42,6 +40,7 @@ app.use(cookieParser());
 app.use(cors());
 var fs = require('fs');
 const neatCsv = require('neat-csv');
+var iconv = require('iconv-lite');
 
 const expireTime = 3600 * 24 * 7; //7 days
 
@@ -516,9 +515,14 @@ let makeCSVArray = (file, type) => {
             console.error(err)
             return
         }
-        var iconv = new Iconv('windows-1252', 'utf-8');
-        var newData = iconv.convert(data);
-        let csvData = await neatCsv(newData);
+        // var iconv = new Iconv('win1252', 'utf-8');
+        // var newData = iconv.convert(data);
+
+        let str = iconv.decode(data, 'win1252');
+        let buf = iconv.encode(str, 'utf8');
+
+
+        let csvData = await neatCsv(buf);
         dao.importCSVData(csvData, type);
     })
 }
