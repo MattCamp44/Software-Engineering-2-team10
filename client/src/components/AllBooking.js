@@ -13,7 +13,7 @@ class AllBooking extends React.Component {
     super();
     this.state = {
       courses: [],
-      selectedPeriod: "M",
+      selectedPeriod: "Monthly",
       selectedCourse: null,
       selectedCourseId: null,
       startDate: new Date(),
@@ -183,7 +183,7 @@ class AllBooking extends React.Component {
       this.state.selectedCourseId
     )
       .then((data) => {
-        if (period === "M") {
+        if (period === "Monthly") {
           var months = [];
           for (var k = 0; k < 12; k++) {
             months.push(0);
@@ -287,7 +287,7 @@ class AllBooking extends React.Component {
             },
           };
           this.setState({ series, options });
-        } else if (period === "W") {
+        } else if (period === "Weekly") {
           var weeks = [];
           var weekNames = [];
           for (var _w = 0; _w < data.length; _w++) {
@@ -492,8 +492,8 @@ class AllBooking extends React.Component {
         {(context) => (
           <div className="container col-md-12">
             <div
-              className="jumbotron p-4 p-md-5 text-white rounded"
-              style={{ backgroundColor: "rgb(74, 77, 85)" }}
+              className="jumbotron p-4 p-md-2 text-white rounded"
+              style={{ backgroundColor: "rgb(182, 93, 16)", opacity: "60%" }}
             >
               <div className="col-md-6 px-0">
                 <h1 className="display-4 font-italic">
@@ -515,11 +515,11 @@ class AllBooking extends React.Component {
                       this.onPeriodChange(x);
                     }}
                   >
-                    <option value="W">Weekly</option>
-                    <option value="M" selected>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly" selected>
                       Monthly
                     </option>
-                    <option value="L">Daily</option>
+                    <option value="Daily">Daily</option>
                   </select>
                 </div>
                 <div className="col-md-10">
@@ -577,9 +577,9 @@ class AllBooking extends React.Component {
               </Row>
               <Row>
                 <label style={{ margin: "0 auto" }}>
-                  {this.state.selectedPeriod === "M"
+                  {this.state.selectedPeriod === "Monthly"
                     ? "Monthly Average for "
-                    : this.state.selectedPeriod === "W"
+                    : this.state.selectedPeriod === "Weekly"
                     ? "Weekly Average for "
                     : "Daily Average for "}
                   {this.state.selectedCourse === null ? "All" : this.state.selectedCourse} 

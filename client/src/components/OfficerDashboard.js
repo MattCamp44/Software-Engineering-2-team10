@@ -11,13 +11,14 @@ class OfficerDashboard extends React.Component {
     }
 
     componentDidMount() {
-        API.isAuthenticated().then(
-            (user) => {
-                this.setState((state) => ({ authUser: user }));
-            }
-        ).catch((err) => {
-            this.setState({ authErr: err.errorObj });
-        });
+        //NOT NEEDED, ALREADY DONE IN App.js
+        // API.isAuthenticated().then(
+        //     (user) => {
+        //         this.setState({ authUser: user });
+        //     }
+        // ).catch((err) => {
+        //     this.setState({ authErr: err.errorObj });
+        // });
     }
 
     onChangeHandler = event => {
@@ -84,10 +85,13 @@ class OfficerDashboard extends React.Component {
     render() {
         return (<>
             <div className="container col-md-12">
-                <div className="jumbotron p-4 p-md-5 text-white rounded" style={{ backgroundColor: 'rgb(74, 77, 85)' }}>
+                <div 
+                className="jumbotron p-4 p-md-2 text-white rounded"
+                style={{ backgroundColor: "rgb(182, 93, 16)", opacity: "60%" }}
+                >
                     <div className="col-md-6 px-0">
-                        <h1 className="display-4 font-italic"><h2>Welcome, {this.props.name}</h2></h1>
-                        <p className="lead my-3">To import the data, please use the uploader below:</p>
+                        <h4 className="display-4 font-italic"><h5>Welcome, {this.props.name}</h5></h4>
+                        <p className="lead my-4">To import the data, please use the uploader below:</p>
                     </div>
                 </div>
                 <Form>
@@ -111,7 +115,7 @@ class OfficerDashboard extends React.Component {
                                 </Col>
                                 <Col className="col-md-2">
                                     <label>Select your file:</label>
-                                    <input type="file" name="file" onChange={this.onChangeHandler} />
+                                    <input id = "file-upload" type="file" name="file" onChange={this.onChangeHandler} />
                                 </Col>
                             </Row>
                             <Row>

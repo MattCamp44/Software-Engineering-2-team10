@@ -7,16 +7,20 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faTrashAlt, faLaptop, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class DashboardBody extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { courses: [], lectures: [], students: [], selectedCourse: null, selectedLecture: null, userId: props.id, nPagesL: 0, currentPageL: 0, showCancelledL: 0 };
+        this.state = { courses: [], lectures: [], students: [], selectedCourse: null, selectedLecture: null, userId: props.id, nPagesL: 0, currentPageL: 0, showCancelledL: 0, lectureStartDate: new Date(), lectureEndDate: null };
     }
 
     componentDidMount() {
@@ -27,6 +31,11 @@ class DashboardBody extends React.Component {
             .catch((errorObj) => {
                 console.log(errorObj);
             });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.showCancelledL !== this.state.showCancelledL || prevState.lectureStartDate !== this.state.lectureStartDate || prevState.lectureEndDate !== this.state.lectureEndDate)
+            this.getCourseLectures(this.state.selectedCourse);
     }
 
     getTeacherCourses = (ev) => {
@@ -40,15 +49,14 @@ class DashboardBody extends React.Component {
     }
 
     getCourseLectures = (course) => {
-        API.getCourseLectures(course.CourseId)
+        API.getCourseLectures(course.CourseId, this.state.showCancelledL, this.state.lectureStartDate !== null ? this.state.lectureStartDate.toISOString().slice(0, 10) : this.lectureStartDate, this.state.lectureEndDate !== null ? this.state.lectureEndDate.toISOString().slice(0, 10) : "9999-99-99")
             .then((data) => {
-                data = data.filter(d => d.Canceled === this.state.showCancelledL);
                 data.forEach(element => {
                     const diff = new Date(element.Schedule).getTime() - new Date().getTime();
                     element.Cancelable = diff >= 3600000 ? 1 : 0;
                     element.isBookable = diff >= 3600000 / 2 ? 1 : 0;
                 });
-                this.setState({ lectures: data, selectedCourse: course, selectedLecture: null, nPagesL: Math.ceil(data.length / 10) });
+                this.setState({ lectures: data, selectedCourse: course, selectedLecture: null, nPagesL: Math.ceil(data.length / 10), currentPageL: 0 });
             })
             .catch((errorObj) => {
                 console.log(errorObj);
@@ -73,7 +81,6 @@ class DashboardBody extends React.Component {
             .catch((errorObj) => {
                 console.log(errorObj);
             });
-
     }
 
     makeLectureOnline = (lecture) => {
@@ -86,19 +93,24 @@ class DashboardBody extends React.Component {
             });
     }
 
+    updatePresence = (bookingId, val) => {
+        API.updatePresence(bookingId, val)
+            .then(() => {
+                this.getLectureStudents(this.state.selectedLecture)
+            })
+            .catch((errorObj) => {
+                console.log(errorObj);
+            });
+    }
+
     setVal = (name, newVal) => {
         console.log(name, newVal);
         this.setState({ [name]: newVal });
-
-        if (name === "showCancelledL")
-            this.getCourseLectures(this.state.selectedCourse);
     }
-
 
     deleteLectureConfirm = (lecture) => {
         const diff = new Date(lecture.Schedule).getTime() - new Date().getTime();
         if (diff < 3600000) {
-            console.log("delete");
             confirmAlert({
                 customUI: ({ onClose }) => {
                     return (
@@ -161,8 +173,6 @@ class DashboardBody extends React.Component {
         }
     }
 
-
-
     render() {
         return <>
             <h2>Welcome, {this.props.name}</h2>
@@ -174,10 +184,9 @@ class DashboardBody extends React.Component {
                 {this.state.selectedLecture != null ?
                     <Breadcrumb.Item onClick={(e) => this.getLectureStudents(this.state.selectedLecture)}>Lecture of {this.state.selectedLecture.Schedule}</Breadcrumb.Item> : <></>}
             </Breadcrumb>
-
-            {this.state.selectedLecture != null ? <StudentTable students={this.state.students} />
-                : this.state.selectedCourse != null ? <LectureTable lectures={this.state.lectures} currentPageL={this.state.currentPageL} nPagesL={this.state.nPagesL} setVal={this.setVal} showCancelledL={this.state.showCancelledL} getLectureStudents={this.getLectureStudents} deleteLectureConfirm={this.deleteLectureConfirm} makeLectureOnlineConfirm={this.makeLectureOnlineConfirm} /> :
-                    <CourseTable courses={this.state.courses} getCourseLectures={this.getCourseLectures} />
+            {this.state.selectedLecture != null ? <StudentTable students={this.state.students} selectedLecture={this.state.selectedLecture} updatePresence={this.updatePresence}/>
+                : this.state.selectedCourse != null ? <LectureTable lectures={this.state.lectures} currentPageL={this.state.currentPageL} nPagesL={this.state.nPagesL} lectureStartDate={this.state.lectureStartDate} lectureEndDate={this.state.lectureEndDate} setVal={this.setVal} showCancelledL={this.state.showCancelledL} getLectureStudents={this.getLectureStudents} deleteLectureConfirm={this.deleteLectureConfirm} makeLectureOnlineConfirm={this.makeLectureOnlineConfirm} />
+                    : <CourseTable courses={this.state.courses} getCourseLectures={this.getCourseLectures} />
             }
         </>
     }
@@ -207,21 +216,31 @@ function CourseRow(props) {
 }
 
 function LectureTable(props) {
-
     return <>
-        <div className="switch-custom align-self-end">
+        <Jumbotron className="p-4 mt-1 w-100">
             <Form>
-                <Form.Check
-                    type="switch"
-                    id="custom-switch"
-                    label="Show cancelled"
-                    checked={props.showCancelledL}
-                    onChange={() => props.setVal('showCancelledL', props.showCancelledL === 0 ? 1 : 0)}
-                />
+                <Form.Row>
+                    <Form.Group as={Col}>
+                        <Form.Label>Schedule start date</Form.Label>
+                        <DatePicker className="form-control" selected={props.lectureStartDate} onChange={date => props.setVal('lectureStartDate', date)} />
+                    </Form.Group>
+                    <Form.Group as={Col}>
+                        <Form.Label>Schedule end date</Form.Label>
+                        <DatePicker className="form-control" selected={props.lectureEndDate} onChange={date => props.setVal('lectureEndDate', date)} />
+                    </Form.Group>
+                    <Form.Group as={Col}>
+                        <Form.Label>Canceled</Form.Label>
+                        <Form.Control
+                            as="select"
+                            defaultValue="0"
+                            onChange={(e) => props.setVal('showCancelledL', e.target.value)}>
+                            <option value={0}>No</option>
+                            <option value={1}>Yes</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Form.Row>
             </Form>
-        </div>
-
-
+        </Jumbotron>
         <Table striped bordered hover>
             <thead>
                 <tr>
@@ -270,10 +289,11 @@ function StudentTable(props) {
             <tr>
                 <th>Name</th>
                 <th>Booked on</th>
+                <th>Presence</th>
             </tr>
         </thead>
         <tbody>
-            {props.students.map((e) => <StudentRow key={e.id} student={e} />)}
+            {props.students.map((e) => <StudentRow key={e.id} student={e} selectedLecture={props.selectedLecture} updatePresence={props.updatePresence}/>)}
         </tbody>
     </Table>
 }
@@ -282,6 +302,10 @@ function StudentRow(props) {
     return <tr>
         <td>{props.student.Name}</td>
         <td>{props.student.BookDate}</td>
+        <td> <ButtonGroup size="sm">
+            <Button disabled={new Date() < new Date(props.selectedLecture.Schedule)} variant="outline-primary" active={props.student.Presence == 1} onClick={() => props.updatePresence(props.student.BookingId, 1)}>P</Button>
+            <Button disabled={new Date() < new Date(props.selectedLecture.Schedule)} variant="outline-primary" active={props.student.Presence == 0} onClick={() => props.updatePresence(props.student.BookingId, 0)}>A</Button>
+        </ButtonGroup></td>
     </tr>
 }
 

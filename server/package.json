@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --test=true",
     "start": "node server.js",
+    "start-test": "node support_server.js",
     "cypress:open": "cypress open"
   },
   "author": "",
@@ -17,6 +18,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.1",
+    "iconv-lite": "^0.6.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "morgan": "^1.10.0",

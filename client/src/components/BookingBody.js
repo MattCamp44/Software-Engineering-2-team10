@@ -135,10 +135,13 @@ class BookingBody extends React.Component {
     render() {
         return (<>
             <div className="container col-md-12">
-                <div className="jumbotron p-4 p-md-5 text-white rounded" style={{ backgroundColor: 'rgb(74, 77, 85)' }}>
+                <div 
+                className="jumbotron p-4 p-md-2 text-white rounded"
+                style={{ backgroundColor: "rgb(182, 93, 16)", opacity: "60%" }}
+                >
                     <div className="col-md-6 px-0">
-                        <h1 className="display-4 font-italic"><h2>Welcome, {this.props.name}</h2></h1>
-                        <p className="lead my-3">To book for a lecture, please select a subject listed below:</p>
+                        <h4 className="display-4 font-italic"><h5>Welcome, {this.props.name}</h5></h4>
+                        <p className="lead my-3 font-weight-bold">To book for a lecture, please select a subject listed below:</p>
                     </div>
                     {/* <div className="col-md-3">
                         <button type="button" className="btn btn-lg btn-danger pull-right" onClick={() => this.goToBookingHistory()}>Go to my Reservations</button>
@@ -156,7 +159,7 @@ class BookingBody extends React.Component {
                         <div class="panel panel-default">
                             <Table striped bordered hover variant="white">
                                 <thead>
-                                    <tr style={{ backgroundColor: '#c3c3c3' }}>
+                                    <tr style={{ color:'white', backgroundColor: '#d5a27e' }}>
                                         <th className="col-md-1">Schedule</th>
                                         <th>Class Number</th>
                                         <th>Teacher Name</th>
